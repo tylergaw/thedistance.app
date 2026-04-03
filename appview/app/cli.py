@@ -29,3 +29,10 @@ def backfill():
     handle = sys.argv[1]
     result = _backfill(handle)
     print(f"Backfilled {result['records']} records for {result['did']}")
+
+
+def generate_jwk():
+    from authlib.jose import JsonWebKey
+
+    key = JsonWebKey.generate_key("EC", "P-256", is_private=True)
+    print(key.as_json(is_private=True))

@@ -3,28 +3,11 @@ import logging
 import httpx
 
 from app.db import get_connection, upsert_activity
+from app.identity import resolve_identity
 
 log = logging.getLogger(__name__)
 
-RESOLVE_HANDLE_URL = "https://bsky.social/xrpc/com.atproto.identity.resolveHandle"
-PLC_DIRECTORY_URL = "https://plc.directory"
 COLLECTION = "app.thedistance.activity"
-
-
-def resolve_handle(client, handle):
-    resp = client.get(RESOLVE_HANDLE_URL, params={"handle": handle})
-    resp.raise_for_status()
-    return resp.json()["did"]
-
-
-def resolve_pds(client, did):
-    resp = client.get(f"{PLC_DIRECTORY_URL}/{did}")
-    resp.raise_for_status()
-    doc = resp.json()
-    for service in doc.get("service", []):
-        if service.get("id") == "#atproto_pds":
-            return service["serviceEndpoint"]
-    raise ValueError(f"No PDS found in DID document for {did}")
 
 
 def list_records(client, pds, did):
@@ -54,11 +37,8 @@ def backfill(handle):
     log.info("Starting backfill for %s", handle)
 
     with httpx.Client() as client:
-        did = resolve_handle(client, handle)
-        log.info("Resolved %s to %s", handle, did)
-
-        pds = resolve_pds(client, did)
-        log.info("PDS for %s: %s", did, pds)
+        did, resolved_handle, pds = resolve_identity(client, handle)
+        log.info("Resolved %s to %s (PDS: %s)", resolved_handle, did, pds)
 
         conn = get_connection()
         count = 0

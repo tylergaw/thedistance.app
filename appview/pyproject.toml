@@ -11,12 +11,15 @@ dependencies = [
   "python-dotenv>=1.0",
   "pydantic-settings>=2.6",
   "httpx>=0.28",
+  "authlib>=1.3",
+  "itsdangerous>=2.1",
 ]
 
 [project.scripts]
 start = "app.cli:start"
 subscribe = "app.cli:subscribe"
 backfill = "app.cli:backfill"
+generate-jwk = "app.cli:generate_jwk"
 
 [build-system]
 requires = ["hatchling"]

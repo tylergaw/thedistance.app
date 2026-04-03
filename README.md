@@ -26,7 +26,7 @@ You will need a local Postgres database created and running. Set the connection 
 
 ## AppView
 
-The appview is made up of two processes that run simultaneously: a **subscriber** and an **API server**. The subscriber connects to Jetstream and listens for `app.thedistance.activity` records on the network. When it sees one created, updated, or deleted, it writes the change to Postgres. The API server reads from that same database and serves the indexed data over HTTP. Both processes need to be running at the same time, each in its own terminal.
+The appview is made up of two processes that run simultaneously: a **subscriber** and an **API server**. The subscriber connects to Jetstream and listens for records on the network. When it sees one created, updated, or deleted, it writes the change to Postgres. The API server reads from that same database and serves the indexed data over HTTP. Both processes need to be running at the same time.
 
 ### Setup
 
@@ -41,13 +41,25 @@ Copy the example env file and fill in your Postgres connection string:
 cp .env.example .env
 ```
 
+Generate a session secret key and add it to `.env` as `SESSION_SECRET_KEY`:
+
+```
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+Generate the OAuth client signing key and add it to `.env` as `CLIENT_SECRET_JWK`:
+
+```
+uv run generate-jwk
+```
+
 ### Run the API server
 
 ```
 uv run start
 ```
 
-Serves activity data on `http://localhost:8000`.
+Serves activity data on `http://127.0.0.1:8000`.
 
 ### Run the subscriber
 
@@ -55,12 +67,25 @@ Serves activity data on `http://localhost:8000`.
 uv run subscribe
 ```
 
+### Backfill
+
+The subscriber only indexes records as they are created or updated in real time. If a user already has `app.thedistance.activity` records on their PDS from before the subscriber was running, those records will not be in the database. The backfill command fetches all existing records from a user's PDS and indexes them:
+
+```
+cd appview
+uv run backfill <handle>
+```
+
+There is also an API endpoint `POST /api/backfill` that does the same thing, restricted to the authenticated user's own account.
+
 ## Frontend
 
 ```
 cd web
-python -m http.server 8001
+pnpm i && pnpm start
 ```
+
+Access at `http://127.0.0.1:8001`. **Note**: You cannot use `localhost`.
 
 ## Scripts
 
