@@ -191,6 +191,9 @@ def delete_activity_endpoint(
     rkey: str,
     session: dict = Depends(require_auth),
 ):
+    if did != session["did"]:
+        return JSONResponse(status_code=403, content={"error": "You can only delete your own records"})
+
     pds_url = session["pds_url"]
     url = f"{pds_url}/xrpc/com.atproto.repo.deleteRecord"
     body = {
