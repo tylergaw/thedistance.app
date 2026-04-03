@@ -17,6 +17,12 @@ header {
   margin-bottom: 2rem;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 header h1 {
   font-size: 1.5rem;
 }
@@ -101,6 +107,50 @@ header p {
   margin-top: 0.75rem;
   font-size: 0.75rem;
   color: #999;
+}
+
+#auth {
+  font-size: 0.9rem;
+}
+
+#auth .auth-handle {
+  margin-right: 0.5rem;
+  font-weight: 600;
+}
+
+#login-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+#login-handle {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#logout-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+
+.delete-form {
+  margin-top: 0.75rem;
+}
+
+.delete-btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border: 1px solid #c00;
+  border-radius: 4px;
+  background: none;
+  color: #c00;
+  cursor: pointer;
 }
 
 #activities .loading {

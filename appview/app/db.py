@@ -10,7 +10,8 @@ def get_connection():
 
 def init_db():
     with get_connection() as conn:
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS activities (
                 did TEXT NOT NULL,
                 rkey TEXT NOT NULL,
@@ -38,25 +39,65 @@ def init_db():
                 indexed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
                 PRIMARY KEY (did, rkey)
             )
-        """)
-        conn.execute("""
+        """
+        )
+        conn.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_activities_started_at
                 ON activities (started_at DESC)
-        """)
-        conn.execute("""
+        """
+        )
+        conn.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_activities_did
                 ON activities (did)
-        """)
-        conn.execute("""
+        """
+        )
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS cursor (
                 id INTEGER PRIMARY KEY CHECK (id = 1),
                 cursor_value BIGINT NOT NULL
             )
-        """)
+        """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS oauth_auth_requests (
+                state TEXT PRIMARY KEY,
+                authserver_iss TEXT NOT NULL,
+                did TEXT,
+                handle TEXT,
+                pds_url TEXT,
+                pkce_verifier TEXT NOT NULL,
+                scope TEXT NOT NULL,
+                dpop_authserver_nonce TEXT NOT NULL,
+                dpop_private_jwk TEXT NOT NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS oauth_sessions (
+                did TEXT PRIMARY KEY,
+                handle TEXT NOT NULL,
+                pds_url TEXT NOT NULL,
+                authserver_iss TEXT NOT NULL,
+                access_token TEXT NOT NULL,
+                refresh_token TEXT NOT NULL,
+                dpop_authserver_nonce TEXT NOT NULL,
+                dpop_pds_nonce TEXT,
+                dpop_private_jwk TEXT NOT NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        """
+        )
 
 
 def upsert_activity(conn, did, rkey, record):
-    conn.execute("""
+    conn.execute(
+        """
         INSERT INTO activities (
             did, rkey, sport_type, title, description, started_at,
             elapsed_time, moving_time, distance, elevation_gain,
@@ -91,31 +132,33 @@ def upsert_activity(conn, did, rkey, record):
             source = EXCLUDED.source,
             created_at = EXCLUDED.created_at,
             indexed_at = NOW()
-    """, (
-        did,
-        rkey,
-        record["sportType"],
-        record.get("title"),
-        record.get("description"),
-        record["startedAt"],
-        record["elapsedTime"],
-        record["movingTime"],
-        record["distance"],
-        record.get("elevationGain"),
-        record.get("avgSpeed"),
-        record.get("maxSpeed"),
-        record.get("avgHeartRate"),
-        record.get("maxHeartRate"),
-        record.get("avgCadence"),
-        record.get("maxCadence"),
-        record.get("avgPower"),
-        record.get("maxPower"),
-        record.get("calories"),
-        record.get("polyline"),
-        record.get("device"),
-        record.get("source"),
-        record["createdAt"],
-    ))
+    """,
+        (
+            did,
+            rkey,
+            record["sportType"],
+            record.get("title"),
+            record.get("description"),
+            record["startedAt"],
+            record["elapsedTime"],
+            record["movingTime"],
+            record["distance"],
+            record.get("elevationGain"),
+            record.get("avgSpeed"),
+            record.get("maxSpeed"),
+            record.get("avgHeartRate"),
+            record.get("maxHeartRate"),
+            record.get("avgCadence"),
+            record.get("maxCadence"),
+            record.get("avgPower"),
+            record.get("maxPower"),
+            record.get("calories"),
+            record.get("polyline"),
+            record.get("device"),
+            record.get("source"),
+            record["createdAt"],
+        ),
+    )
     conn.commit()
 
 
@@ -130,10 +173,13 @@ def get_cursor(conn):
 
 
 def set_cursor(conn, cursor_value):
-    conn.execute("""
+    conn.execute(
+        """
         INSERT INTO cursor (id, cursor_value) VALUES (1, %s)
         ON CONFLICT (id) DO UPDATE SET cursor_value = EXCLUDED.cursor_value
-    """, (cursor_value,))
+    """,
+        (cursor_value,),
+    )
     conn.commit()
 
 
@@ -156,6 +202,131 @@ def list_activities(conn, limit=50, offset=0, sport_type=None, did=None):
     params.extend([limit, offset])
 
     return conn.execute(query, params).fetchall()
+
+
+# OAuth auth request helpers
+
+
+def save_auth_request(
+    conn,
+    state,
+    authserver_iss,
+    did,
+    handle,
+    pds_url,
+    pkce_verifier,
+    scope,
+    dpop_authserver_nonce,
+    dpop_private_jwk,
+):
+    conn.execute(
+        """
+        INSERT INTO oauth_auth_requests (
+            state, authserver_iss, did, handle, pds_url,
+            pkce_verifier, scope, dpop_authserver_nonce, dpop_private_jwk
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """,
+        (
+            state,
+            authserver_iss,
+            did,
+            handle,
+            pds_url,
+            pkce_verifier,
+            scope,
+            dpop_authserver_nonce,
+            dpop_private_jwk,
+        ),
+    )
+    conn.commit()
+
+
+def get_auth_request(conn, state):
+    return conn.execute(
+        "SELECT * FROM oauth_auth_requests WHERE state = %s", (state,)
+    ).fetchone()
+
+
+def delete_auth_request(conn, state):
+    conn.execute("DELETE FROM oauth_auth_requests WHERE state = %s", (state,))
+    conn.commit()
+
+
+# OAuth session helpers
+
+
+def save_oauth_session(
+    conn,
+    did,
+    handle,
+    pds_url,
+    authserver_iss,
+    access_token,
+    refresh_token,
+    dpop_authserver_nonce,
+    dpop_private_jwk,
+):
+    conn.execute(
+        """
+        INSERT INTO oauth_sessions (
+            did, handle, pds_url, authserver_iss,
+            access_token, refresh_token,
+            dpop_authserver_nonce, dpop_private_jwk
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (did) DO UPDATE SET
+            handle = EXCLUDED.handle,
+            pds_url = EXCLUDED.pds_url,
+            authserver_iss = EXCLUDED.authserver_iss,
+            access_token = EXCLUDED.access_token,
+            refresh_token = EXCLUDED.refresh_token,
+            dpop_authserver_nonce = EXCLUDED.dpop_authserver_nonce,
+            dpop_private_jwk = EXCLUDED.dpop_private_jwk
+    """,
+        (
+            did,
+            handle,
+            pds_url,
+            authserver_iss,
+            access_token,
+            refresh_token,
+            dpop_authserver_nonce,
+            dpop_private_jwk,
+        ),
+    )
+    conn.commit()
+
+
+def get_oauth_session(conn, did):
+    return conn.execute(
+        "SELECT * FROM oauth_sessions WHERE did = %s", (did,)
+    ).fetchone()
+
+
+def update_oauth_session_tokens(
+    conn, did, access_token, refresh_token, dpop_authserver_nonce
+):
+    conn.execute(
+        """
+        UPDATE oauth_sessions
+        SET access_token = %s, refresh_token = %s, dpop_authserver_nonce = %s
+        WHERE did = %s
+    """,
+        (access_token, refresh_token, dpop_authserver_nonce, did),
+    )
+    conn.commit()
+
+
+def update_oauth_session_pds_nonce(conn, did, dpop_pds_nonce):
+    conn.execute(
+        "UPDATE oauth_sessions SET dpop_pds_nonce = %s WHERE did = %s",
+        (dpop_pds_nonce, did),
+    )
+    conn.commit()
+
+
+def delete_oauth_session(conn, did):
+    conn.execute("DELETE FROM oauth_sessions WHERE did = %s", (did,))
+    conn.commit()
 
 
 def get_activity(conn, did, rkey):
