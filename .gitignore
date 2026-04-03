@@ -1,0 +1,25 @@
+.env
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/
+.python-version
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / SvelteKit
+node_modules/
+.svelte-kit/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,168 @@
+{
+  "lexicon": 1,
+  "id": "app.thedistance.activity",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A recorded physical activity such as a bike ride.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["sportType", "startedAt", "elapsedTime", "movingTime", "distance", "createdAt"],
+        "properties": {
+          "images": {
+            "type": "array",
+            "description": "Photos from the activity.",
+            "maxLength": 8,
+            "items": {
+              "type": "ref",
+              "ref": "#image"
+            }
+          },
+          "sportType": {
+            "type": "string",
+            "description": "The type of activity.",
+            "maxLength": 128,
+            "knownValues": ["ride"]
+          },
+          "title": {
+            "type": "string",
+            "description": "User-provided name for the activity.",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string",
+            "description": "User-provided description of the activity.",
+            "maxLength": 3000
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When the activity started."
+          },
+          "elapsedTime": {
+            "type": "integer",
+            "description": "Total elapsed time in seconds, including stopped time.",
+            "minimum": 0
+          },
+          "movingTime": {
+            "type": "integer",
+            "description": "Time spent in motion in seconds.",
+            "minimum": 0
+          },
+          "distance": {
+            "type": "string",
+            "description": "Total distance in meters. String-encoded decimal number, e.g. '51214.6'.",
+            "maxLength": 64
+          },
+          "elevationGain": {
+            "type": "string",
+            "description": "Total elevation gain in meters. String-encoded decimal number.",
+            "maxLength": 64
+          },
+          "avgSpeed": {
+            "type": "string",
+            "description": "Average speed in meters per second. String-encoded decimal number.",
+            "maxLength": 64
+          },
+          "maxSpeed": {
+            "type": "string",
+            "description": "Maximum speed in meters per second. String-encoded decimal number.",
+            "maxLength": 64
+          },
+          "avgHeartRate": {
+            "type": "integer",
+            "description": "Average heart rate in beats per minute.",
+            "minimum": 0
+          },
+          "maxHeartRate": {
+            "type": "integer",
+            "description": "Maximum heart rate in beats per minute.",
+            "minimum": 0
+          },
+          "avgCadence": {
+            "type": "integer",
+            "description": "Average cadence in revolutions per minute.",
+            "minimum": 0
+          },
+          "maxCadence": {
+            "type": "integer",
+            "description": "Maximum cadence in revolutions per minute.",
+            "minimum": 0
+          },
+          "avgPower": {
+            "type": "integer",
+            "description": "Average power output in watts.",
+            "minimum": 0
+          },
+          "maxPower": {
+            "type": "integer",
+            "description": "Maximum power output in watts.",
+            "minimum": 0
+          },
+          "calories": {
+            "type": "integer",
+            "description": "Estimated calories burned.",
+            "minimum": 0
+          },
+          "polyline": {
+            "type": "string",
+            "description": "Encoded polyline string representing a simplified, privacy-trimmed route for map display. Uses Google's encoded polyline algorithm format. Ingestion services should simplify polylines to fit within the 20,000 byte limit. This limit may be revisited if it proves insufficient.",
+            "maxLength": 20000
+          },
+          "device": {
+            "type": "string",
+            "description": "Name of the device that recorded the activity.",
+            "maxLength": 300
+          },
+          "source": {
+            "type": "string",
+            "description": "Where the activity data was imported from.",
+            "maxLength": 128,
+            "knownValues": ["garmin", "strava", "wahoo", "manual", "fit-file", "gpx-file"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Timestamp of when this record was created."
+          }
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": ["image"],
+      "properties": {
+        "image": {
+          "type": "blob",
+          "accept": ["image/jpeg", "image/png", "image/webp"],
+          "maxSize": 10000000
+        },
+        "alt": {
+          "type": "string",
+          "description": "Alt text for the image.",
+          "maxLength": 3000
+        },
+        "aspectRatio": {
+          "type": "ref",
+          "ref": "#aspectRatio"
+        }
+      }
+    },
+    "aspectRatio": {
+      "type": "object",
+      "description": "Width and height of the image, used for layout before the image loads.",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}
