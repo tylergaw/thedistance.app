@@ -1,6 +1,6 @@
 databases:
   - name: thedistance-db
-    plan: free
+    plan: starter
     postgresMajorVersion: "16"
 
 services:
@@ -31,7 +31,7 @@ services:
     rootDir: appview
     buildCommand: uv sync
     startCommand: uv run subscribe
-    plan: free
+    plan: starter
     envVars:
       - key: DATABASE_URL
         fromDatabase:
