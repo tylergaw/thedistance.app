@@ -1,7 +1,7 @@
 projects:
   - name: The Distance
     environments:
-      - name: production
+      - name: Production
         databases:
           - name: thedistance-db
             plan: basic-256mb
@@ -14,6 +14,8 @@ projects:
             buildCommand: uv sync
             startCommand: uv run start
             plan: free
+            domains:
+              - api.thedistance.app
             envVars:
               - key: DATABASE_URL
                 fromDatabase:
@@ -45,5 +47,7 @@ projects:
             name: thedistance-web
             runtime: static
             rootDir: web
+            domains:
+              - thedistance.app
             buildCommand: ""
             staticPublishPath: .
