@@ -1,46 +1,49 @@
-databases:
-  - name: thedistance-db
-    plan: starter
-    postgresMajorVersion: "16"
+projects:
+  - name: The Distance
+    environments:
+      - name: production
+        databases:
+          - name: thedistance-db
+            plan: basic-256mb
+            postgresMajorVersion: "16"
+        services:
+          - type: web
+            name: thedistance-api
+            runtime: python
+            rootDir: appview
+            buildCommand: uv sync
+            startCommand: uv run start
+            plan: free
+            envVars:
+              - key: DATABASE_URL
+                fromDatabase:
+                  name: thedistance-db
+                  property: connectionString
+              - key: APP_URL
+                value: https://api.thedistance.app
+              - key: FRONTEND_URL
+                value: https://thedistance.app
+              - key: SESSION_SECRET_KEY
+                sync: false
+              - key: CLIENT_SECRET_JWK
+                sync: false
 
-services:
-  - type: web
-    name: thedistance-api
-    runtime: python
-    rootDir: appview
-    buildCommand: uv sync
-    startCommand: uv run start
-    plan: free
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: thedistance-db
-          property: connectionString
-      - key: APP_URL
-        value: https://api.thedistance.app
-      - key: FRONTEND_URL
-        value: https://thedistance.app
-      - key: SESSION_SECRET_KEY
-        sync: false
-      - key: CLIENT_SECRET_JWK
-        sync: false
+          - type: worker
+            name: thedistance-subscriber
+            runtime: python
+            rootDir: appview
+            buildCommand: uv sync
+            startCommand: uv run subscribe
+            plan: starter
+            envVars:
+              - key: DATABASE_URL
+                fromDatabase:
+                  name: thedistance-db
+                  property: connectionString
 
-  - type: worker
-    name: thedistance-subscriber
-    runtime: python
-    rootDir: appview
-    buildCommand: uv sync
-    startCommand: uv run subscribe
-    plan: starter
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: thedistance-db
-          property: connectionString
-
-  - type: web
-    name: thedistance-web
-    runtime: static
-    rootDir: web
-    buildCommand: ""
-    staticPublishPath: .
+          - type: web
+            name: thedistance-web
+            runtime: static
+            rootDir: web
+            buildCommand: ""
+            staticPublishPath: .
