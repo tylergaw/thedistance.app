@@ -1,10 +1,17 @@
+import os
 import sys
 
 import uvicorn
 
 
 def start():
-    uvicorn.run("app.main:app", reload=True)
+    reload = os.getenv("UVICORN_RELOAD", "false").lower() == "true"
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", "8000")),
+        reload=reload,
+    )
 
 
 def subscribe():
