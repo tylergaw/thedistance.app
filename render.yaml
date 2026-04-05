@@ -51,3 +51,7 @@ projects:
               - thedistance.app
             buildCommand: ""
             staticPublishPath: .
+            routes:
+              - type: rewrite
+                source: /profile/*
+                destination: /profile/index.html

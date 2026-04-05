@@ -1,5 +1,5 @@
-const params = new URLSearchParams(window.location.search);
-const handle = params.get("handle");
+const [_, rawHandle] = window.location.pathname.split("/profile/");
+const handle = rawHandle.replaceAll("/", "");
 
 async function init() {
   await checkAuth();
@@ -22,8 +22,9 @@ async function init() {
     const data = await res.json();
     did = data.did;
   } catch (err) {
-    document.getElementById("activities").innerHTML =
-      `<p class="error">${err.message}</p>`;
+    document.getElementById(
+      "activities"
+    ).innerHTML = `<p class="error">${err.message}</p>`;
     return;
   }
 
