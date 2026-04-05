@@ -1,4 +1,6 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = window.location.protocol.startsWith("https")
+  ? "https://api.thedistance.app"
+  : "http://127.0.0.1:8000";
 
 const fetchOpts = { credentials: "include" };
 
@@ -184,7 +186,7 @@ function renderLoginForm() {
 }
 
 function renderLoggedIn(handle) {
-  return `<a href="/profile/?handle=${handle}" class="auth-handle">${handle}</a>
+  return `<a href="/profile/${handle}" class="auth-handle">${handle}</a>
     <button id="logout-btn" type="button">Sign out</button>`;
 }
 
