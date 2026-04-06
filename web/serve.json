@@ -1,6 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/profile/:handle", "destination": "/profile/index.html" },
-    { "source": "/upload", "destination": "/upload/index.html" }
-  ]
-}

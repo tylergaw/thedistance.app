@@ -14,9 +14,11 @@ build/
 .coverage
 htmlcov/
 
-# Node / SvelteKit
+# Node
 node_modules/
-.svelte-kit/
+
+# 11ty
+web/_site/
 
 # IDE
 .idea/
