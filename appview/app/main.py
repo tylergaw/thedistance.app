@@ -4,7 +4,7 @@ from urllib.parse import urlencode, urlparse
 
 import httpx
 from authlib.jose import JsonWebKey
-from fastapi import BackgroundTasks, Depends, FastAPI, Query, Request
+from fastapi import BackgroundTasks, Depends, FastAPI, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
@@ -23,6 +23,7 @@ from app.db import (
     save_oauth_session,
     update_oauth_session_pds_nonce,
     update_oauth_session_tokens,
+    upsert_activity,
 )
 from app.db import (
     get_activity as _get,
@@ -31,6 +32,8 @@ from app.db import (
     list_activities as _list,
 )
 from app.identity import is_valid_did, is_valid_handle, resolve_handle, resolve_identity
+from app.parse import parse_file
+from app.tid import generate_tid
 from app.oauth import (
     fetch_authserver_meta,
     initial_token_request,
@@ -53,7 +56,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_url],
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -183,9 +186,96 @@ def resolve_handle_endpoint(handle: str):
     return {"did": did, "handle": resolved_handle}
 
 
+# --- File parsing endpoints ---
+
+@app.post("/api/parse")
+async def parse_files(
+    files: list[UploadFile],
+    session: dict = Depends(require_auth),
+):
+    if not files:
+        return JSONResponse(status_code=400, content={"error": "No files provided"})
+
+    activities = []
+    errors = []
+
+    for f in files:
+        try:
+            data = await f.read()
+            activity = parse_file(f.filename, data)
+            activities.append(activity)
+        except ValueError as e:
+            errors.append({"filename": f.filename, "error": str(e)})
+        except Exception as e:
+            log.exception("Failed to parse %s", f.filename)
+            errors.append({"filename": f.filename, "error": "Failed to parse file"})
+
+    result = {"activities": activities}
+    if errors:
+        result["errors"] = errors
+
+    return result
+
+
 # --- Record management endpoints ---
 
-@app.post("/api/activities/{did}/{rkey}/delete")
+def to_camel_case(s):
+    parts = s.split("_")
+    return parts[0] + "".join(p.capitalize() for p in parts[1:])
+
+
+@app.post("/api/activities")
+def create_activity_endpoint(
+    req: dict,
+    session: dict = Depends(require_auth),
+):
+    record = {to_camel_case(k): v for k, v in req.items()}
+
+    required = ["sportType", "startedAt", "elapsedTime", "movingTime", "distance", "createdAt"]
+    missing = [f for f in required if f not in record]
+    if missing:
+        return JSONResponse(
+            status_code=400, content={"error": f"Missing required fields: {', '.join(missing)}"}
+        )
+
+    rkey = generate_tid()
+    pds_url = session["pds_url"]
+    url = f"{pds_url}/xrpc/com.atproto.repo.createRecord"
+    body = {
+        "repo": session["did"],
+        "collection": "app.thedistance.activity",
+        "rkey": rkey,
+        "record": record,
+    }
+
+    try:
+        with httpx.Client() as client:
+            resp, dpop_pds_nonce = pds_authed_request(
+                client=client, method="POST", url=url, session=session, body=body,
+            )
+    except httpx.TimeoutException:
+        log.error("PDS request timed out for %s", session["did"])
+        return JSONResponse(status_code=504, content={"error": "PDS request timed out"})
+    except httpx.HTTPError as e:
+        log.error("PDS request failed for %s: %s", session["did"], e)
+        return JSONResponse(status_code=502, content={"error": "Failed to reach PDS"})
+
+    conn = get_connection()
+    try:
+        update_oauth_session_pds_nonce(conn, session["did"], dpop_pds_nonce)
+        if resp.status_code in [200, 201]:
+            upsert_activity(conn, session["did"], rkey, record)
+    finally:
+        conn.close()
+
+    if resp.status_code not in [200, 201]:
+        log.error("PDS create error: %s", resp.text)
+        return JSONResponse(status_code=resp.status_code, content={"error": "PDS create failed"})
+
+    return {"status": "created", "rkey": rkey, "did": session["did"]}
+
+
+@app.delete("/api/activities/{did}/{rkey}")
 def delete_activity_endpoint(
     did: str,
     rkey: str,
@@ -202,10 +292,17 @@ def delete_activity_endpoint(
         "rkey": rkey,
     }
 
-    with httpx.Client() as client:
-        resp, dpop_pds_nonce = pds_authed_request(
-            client=client, method="POST", url=url, session=session, body=body,
-        )
+    try:
+        with httpx.Client() as client:
+            resp, dpop_pds_nonce = pds_authed_request(
+                client=client, method="POST", url=url, session=session, body=body,
+            )
+    except httpx.TimeoutException:
+        log.error("PDS request timed out for %s", session["did"])
+        return JSONResponse(status_code=504, content={"error": "PDS request timed out"})
+    except httpx.HTTPError as e:
+        log.error("PDS request failed for %s: %s", session["did"], e)
+        return JSONResponse(status_code=502, content={"error": "Failed to reach PDS"})
 
     conn = get_connection()
     try:
