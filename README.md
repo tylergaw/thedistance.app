@@ -1,20 +1,20 @@
-# The Distance
+# [The Distance](https://thedistance.app)
 
 ⚠️ Extremely WIP
 
-Decentralized activity tracker on the [AT Protocol](https://atproto.com)
+Decentralized physical activity tracker on the [AT Protocol](https://atproto.com).
 
-**Domain:** thedistance.app
-**Lexicon:** [`app.thedistance.activity`](https://lexicon.garden/lexicon/did:plc:gbye6kw5wlaaa2kaocnqswm3/app.thedistance.activity)
+**Lexicons:**
+
+- [`app.thedistance.activity`](https://lexicon.garden/lexicon/did:plc:gbye6kw5wlaaa2kaocnqswm3/app.thedistance.activity)
 
 ## Local Development
 
-### Structure
+This is a monorepo, it's made up of: A Jetstream subscriber, a REST API, and the website. All three deployed with Render. See `render.yaml` for details.
 
-- `lexicons/` — AT Protocol lexicon schemas
-- `appview/` — Backend: Jetstream subscriber + API server
-- `web/` — Frontend
-- `scripts/` — Data conversion tools (Strava → activity records)
+- `appview` — Backend: Jetstream subscriber + API server
+- `web` — Frontend built with 11ty
+- `lexicons` — AT Protocol lexicon schemas
 
 ### System requirements
 
@@ -88,6 +88,8 @@ uv run pytest
 Test fixture files (FIT, etc.) live in `tests/fixtures/`.
 
 ## Frontend
+
+The frontend uses [Eleventy](https://www.11ty.dev/) with [WebC](https://www.11ty.dev/docs/languages/webc/) for templating. Source files live in `web/src/` and build to `web/_site/`.
 
 ```
 cd web

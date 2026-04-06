@@ -32,35 +32,6 @@ header p {
   font-size: 0.875rem;
 }
 
-#lookup {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-#handle {
-  flex: 1;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.9rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-#lookup button {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 6px;
-  background: #1a1a1a;
-  color: #fff;
-  cursor: pointer;
-}
-
-#profile {
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
 .activity {
   background: #fff;
   border: 1px solid #e0e0e0;

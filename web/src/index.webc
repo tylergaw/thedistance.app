@@ -1,0 +1,6 @@
+---
+layout: layout.webc
+title: The Distance
+script: /app.js
+---
+<div id="activities"></div>

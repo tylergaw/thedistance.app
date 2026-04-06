@@ -1,0 +1,7 @@
+---
+layout: layout.webc
+title: Profile - The Distance
+script: /profile.js
+---
+<h2 id="profile-handle"></h2>
+<div id="activities"></div>

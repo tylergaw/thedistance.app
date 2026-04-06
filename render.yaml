@@ -51,8 +51,8 @@ projects:
             rootDir: web
             domains:
               - thedistance.app
-            buildCommand: ""
-            staticPublishPath: .
+            buildCommand: pnpm install && pnpm build
+            staticPublishPath: _site
             routes:
               - type: rewrite
                 source: /profile/*
