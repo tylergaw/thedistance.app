@@ -29,6 +29,8 @@ projects:
                 sync: false
               - key: CLIENT_SECRET_JWK
                 sync: false
+              - key: UVICORN_RELOAD
+                value: "false"
 
           - type: worker
             name: thedistance-subscriber
@@ -55,3 +57,6 @@ projects:
               - type: rewrite
                 source: /profile/*
                 destination: /profile/index.html
+              - type: rewrite
+                source: /upload
+                destination: /upload/index.html

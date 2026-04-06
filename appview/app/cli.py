@@ -5,7 +5,7 @@ import uvicorn
 
 
 def start():
-    reload = os.getenv("UVICORN_RELOAD", "false").lower() == "true"
+    reload = os.getenv("UVICORN_RELOAD", "true").lower() == "true"
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",

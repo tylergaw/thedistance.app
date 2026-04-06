@@ -78,6 +78,15 @@ uv run backfill <handle>
 
 There is also an API endpoint `POST /api/backfill` that does the same thing, restricted to the authenticated user's own account.
 
+### Tests
+
+```
+cd appview
+uv run pytest
+```
+
+Test fixture files (FIT, etc.) live in `tests/fixtures/`.
+
 ## Frontend
 
 ```

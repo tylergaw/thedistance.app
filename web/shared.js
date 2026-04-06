@@ -97,7 +97,11 @@ function renderActivity(activity, showDelete) {
   return `<article class="activity" id="activity-${activity.rkey}">
     <div class="activity-header">
       <div class="activity-title">${activity.title || "Untitled Ride"}</div>
-      <div class="activity-did">${activity.did}</div>
+      ${
+        activity.did !== undefined
+          ? `<div class="activity-did">${activity.did}</div>`
+          : ""
+      }
     </div>
     <div class="activity-date">${formatDate(activity.started_at)}</div>
     <div class="activity-stats">${statsHtml}</div>
@@ -152,10 +156,10 @@ async function handleDelete(e) {
 
   try {
     const res = await fetch(
-      `${API_BASE}/api/activities/${did}/${rkey}/delete`,
+      `${API_BASE}/api/activities/${did}/${rkey}`,
       {
         ...fetchOpts,
-        method: "POST",
+        method: "DELETE",
       }
     );
 
@@ -187,6 +191,7 @@ function renderLoginForm() {
 
 function renderLoggedIn(handle) {
   return `<a href="/profile/${handle}" class="auth-handle">${handle}</a>
+    <a href="/upload">Upload</a>
     <button id="logout-btn" type="button">Sign out</button>`;
 }
 
