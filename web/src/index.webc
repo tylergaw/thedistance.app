@@ -3,4 +3,17 @@ layout: layout.webc
 title: The Distance
 script: /app.js
 ---
+
+<div>
+  <p>
+    Track and share physical activities on the Social Web. Cycling, running,
+    walking, hiking. Anything that gets you up and moving.
+  </p>
+  <p>
+    Another sentence or two here to introduce the AT Protocol would be helpful.
+    Doesn’t have to be deep, just enough to provide <a href="">a link</a> to a
+    page that goes into more detail would be great.
+  </p>
+</div>
+
 <div id="activities"></div>

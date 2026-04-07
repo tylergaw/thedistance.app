@@ -155,13 +155,10 @@ async function handleDelete(e) {
   btn.textContent = "Deleting\u2026";
 
   try {
-    const res = await fetch(
-      `${API_BASE}/api/activities/${did}/${rkey}`,
-      {
-        ...fetchOpts,
-        method: "DELETE",
-      }
-    );
+    const res = await fetch(`${API_BASE}/api/activities/${did}/${rkey}`, {
+      ...fetchOpts,
+      method: "DELETE",
+    });
 
     if (!res.ok) {
       const err = await res.json();
@@ -209,6 +206,9 @@ async function checkAuth() {
     // Not logged in
   }
   currentUser = null;
+
+  if (!container) return;
+
   container.innerHTML = renderLoginForm();
   document.getElementById("login-form").addEventListener("submit", login);
 }

@@ -1,20 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title @text="title" webc:keep></title>
-  <link rel="stylesheet" href="/style.css" webc:keep />
-</head>
-<body>
-  <header>
-    <div class="header-top">
-      <h1><a href="/">The Distance</a></h1>
-      <div id="auth"></div>
-    </div>
-  </header>
-  <main @raw="content"></main>
-  <script src="/shared.js" webc:keep></script>
-  <script :src="script" webc:keep webc:if="script"></script>
-</body>
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title @text="title" webc:keep></title>
+
+    <link rel="stylesheet" href="/style.css" webc:keep />
+    <style @raw="getBundle('css')" webc:keep></style>
+  </head>
+  <body>
+    <page-header></page-header>
+    <main @raw="content"></main>
+
+    <script src="/shared.js" webc:keep></script>
+    <script :src="script" webc:keep webc:if="script"></script>
+  </body>
 </html>

@@ -1,0 +1,22 @@
+<header webc:root="override">
+  <h1><a href="/">The Distance</a></h1>
+  <div id="auth"></div>
+</header>
+
+<style webc:scoped="page-header">
+  :host {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.875rem;
+  }
+</style>
