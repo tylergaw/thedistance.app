@@ -1,22 +1,71 @@
 <header webc:root="override">
-  <h1><a href="/">The Distance</a></h1>
+  <h1>
+    <a href="/">
+      <img
+        src="/images/logo-small-distance.svg"
+        alt="Distance"
+        width="113"
+        height="32"
+      />
+      <dinkus></dinkus>
+    </a>
+  </h1>
+
+  <nav>
+    <a href="">About</a>
+    <a href="">Tools</a>
+    <a href="">Log in</a>
+  </nav>
+
   <div id="auth"></div>
 </header>
 
 <style webc:scoped="page-header">
   :host {
+    align-items: center;
+    column-gap: 1rem;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+    padding: 1.2rem 2.5rem 1rem 3.25rem;
   }
 
   h1 {
-    font-size: 1.5rem;
+    a {
+      display: flex;
+      flex-direction: column;
+      row-gap: 0.25rem;
+    }
+
+    dinkus {
+      --height: 0.5rem;
+
+      > div {
+        flex: 1;
+      }
+    }
   }
 
-  p {
-    color: #666;
-    font-size: 0.875rem;
+  nav {
+    column-gap: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+
+    a {
+      border: 1px dotted transparent;
+      border-radius: 1rem;
+      color: var(--color-foreground);
+      font-size: 1rem;
+      letter-spacing: -1%;
+      padding: 0.1rem 0.5rem;
+      text-decoration: none;
+
+      &:where(:hover, :focus) {
+        border-color: light-dark(
+          hsl(var(--color-foreground-hsl-light) / 25%),
+          hsl(var(--color-foreground-hsl-dark) / 25%)
+        );
+      }
+    }
   }
 </style>

@@ -4,10 +4,13 @@ title: The Distance
 script: /app.js
 ---
 
-<div>
+<home-hero></home-hero>
+
+<div class="home-intro">
+  <dinkus class="intro-dinkus"></dinkus>
   <p>
-    Track and share physical activities on the Social Web. Cycling, running,
-    walking, hiking. Anything that gets you up and moving.
+    Track and share physical activities. Cycling, running, walking, hiking.
+    Anything that gets you up and moving.
   </p>
   <p>
     Another sentence or two here to introduce the AT Protocol would be helpful.
@@ -17,3 +20,34 @@ script: /app.js
 </div>
 
 <div id="activities"></div>
+
+<style>
+  .home-intro {
+    padding: 1rem 2.5rem;
+    padding-bottom: 4rem;
+
+    p {
+      letter-spacing: -1%;
+      line-height: 1.25;
+      margin-top: 1.5rem;
+      font-size: 1.125rem;
+    }
+
+    p:nth-of-type(1) {
+      font-size: 1.875rem;
+    }
+  }
+
+  .intro-dinkus {
+    max-width: 7.8125rem;
+
+    > div:nth-child(1) {
+      flex: 1;
+      max-width: 2.1875rem;
+    }
+
+    > div:nth-child(2) {
+      flex: 1;
+    }
+  }
+</style>

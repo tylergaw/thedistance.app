@@ -60,3 +60,6 @@ projects:
               - type: rewrite
                 source: /upload
                 destination: /upload/index.html
+              - type: rewrite
+                source: /about
+                destination: /about/index.html
