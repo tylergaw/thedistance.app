@@ -53,6 +53,7 @@
     height: 100%;
     object-fit: cover;
     object-position: center bottom;
+    opacity: 0.75;
     mix-blend-mode: overlay;
   }
 

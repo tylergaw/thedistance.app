@@ -15,6 +15,8 @@
     <a href="/about">About</a>
     <a href="#login" class="btn" id="page-header-auth-btn">Log in / Join</a>
   </nav>
+
+  <scheme-chooser></scheme-chooser>
 </header>
 
 <script webc:bucket="components">
@@ -52,7 +54,7 @@
 <style webc:scoped="page-header">
   :host {
     align-items: center;
-    column-gap: 1rem;
+    column-gap: 0.5rem;
     display: flex;
     justify-content: space-between;
     padding: 1.2rem 3.25rem 1rem 3.25rem;
