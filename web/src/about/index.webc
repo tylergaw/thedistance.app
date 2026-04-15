@@ -3,4 +3,6 @@ layout: layout.webc
 title: About - The Distance
 ---
 
-<h1>About</h1>
+<div class="g-max-centered">
+  <h1>About</h1>
+</div>

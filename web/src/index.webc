@@ -5,7 +5,7 @@ title: The Distance
 
 <home-hero></home-hero>
 
-<div class="home-intro">
+<div class="home-intro g-max-centered">
   <div class="intro-contents-container">
     <div class="intro-contents">
       <dinkus class="intro-dinkus"></dinkus>
@@ -24,6 +24,7 @@ title: The Distance
   <home-auth></home-auth>
 </div>
 
+<!-- FIXME -->
 <div id="activities"></div>
 
 <style>

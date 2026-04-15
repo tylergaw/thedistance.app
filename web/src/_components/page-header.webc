@@ -1,4 +1,4 @@
-<header webc:root="override">
+<header webc:root="override" class="g-max-centered">
   <h1>
     <a href="/">
       <img
@@ -36,6 +36,9 @@
   }
 
   function renderPageHeader(props) {
+    const { user } = props;
+    if (!user.handle) return;
+
     const nav = document.getElementById("page-header-nav");
     const authBtn = document.getElementById("page-header-auth-btn");
     nav.removeChild(authBtn);
@@ -52,7 +55,7 @@
     column-gap: 1rem;
     display: flex;
     justify-content: space-between;
-    padding: 1.2rem 2.5rem 1rem 3.25rem;
+    padding: 1.2rem 3.25rem 1rem 3.25rem;
   }
 
   h1 {
