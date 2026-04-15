@@ -37,7 +37,6 @@
 <style webc:scoped>
   :host {
     display: block;
-    padding: 0 2.5rem;
   }
 
   .inner {

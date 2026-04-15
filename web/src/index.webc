@@ -32,7 +32,7 @@ title: The Distance
     display: flex;
     gap: 1.3125rem;
     flex-wrap: wrap;
-    padding: 2rem 2.5rem;
+    padding-top: 2rem;
     padding-bottom: 20rem;
   }
 

@@ -160,15 +160,6 @@
 </style>
 
 <script webc:bucket="components">
-  function renderHomeAuth(props) {
-    const { user } = props;
-
-    if (!user.handle) return;
-
-    const form = document.getElementById("login");
-    form.classList.add("hidden");
-  }
-
   async function login(e) {
     e.preventDefault();
     const input = document.getElementById("handle");
@@ -210,6 +201,14 @@
     }
   }
 
-  const form = document.getElementById("login");
-  form.addEventListener("submit", login);
+  document.addEventListener("afterAuthCheck", (e) => {
+    const { user } = e.detail;
+    if (!user) {
+      form.addEventListener("submit", login);
+      return;
+    }
+
+    const form = document.getElementById("login");
+    form.classList.add("hidden");
+  });
 </script>

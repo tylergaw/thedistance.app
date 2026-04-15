@@ -3,5 +3,10 @@ layout: layout.webc
 title: Profile - The Distance
 script: /profile.js
 ---
+
+<div class="g-max-centered">
+  <h1>Profile</h1>
+</div>
+
 <h2 id="profile-handle"></h2>
 <div id="activities"></div>

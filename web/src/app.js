@@ -1,19 +1,3 @@
-getAuthedUser().then((user) => {
-  if (user) {
-    try {
-      if (isFunction(renderPageHeader)) {
-        renderPageHeader({ user });
-      }
-
-      if (isFunction(renderHomeAuth)) {
-        renderHomeAuth({ user });
-      }
-    } catch (e) {
-      console.warn(e);
-    }
-  }
-});
-
 /**
  * @returns {Promise<{did: string, handle: string}|null>} The authenticated user, or null if not authenticated.
  */
@@ -31,6 +15,16 @@ async function getAuthedUser() {
   return null;
 }
 
-function isFunction(func) {
-  return typeof func === "function";
-}
+getAuthedUser().then((user) => {
+  /*
+    Any component that needs user info, or the lack thereof, should listen for
+    this event. Example: 
+    document.addEventListener("afterAuthCheck", (e) => {
+      const { user } = e.detail;
+      console.log(user); // { did: "1234", handle: "gooddog.bsky.social" }  
+    })
+  */
+  document.dispatchEvent(
+    new CustomEvent("afterAuthCheck", { detail: { user } })
+  );
+});

@@ -13,7 +13,9 @@
 
   <nav id="page-header-nav">
     <a href="/about">About</a>
-    <a href="#login" class="btn" id="page-header-auth-btn">Log in / Join</a>
+    <a href="#login" class="btn hidden" id="page-header-auth-btn"
+      >Log in / Join</a
+    >
   </nav>
 
   <scheme-chooser></scheme-chooser>
@@ -37,18 +39,22 @@
     <button id="logout-btn" type="button">Log out</button>`;
   }
 
-  function renderPageHeader(props) {
-    const { user } = props;
-    if (!user.handle) return;
+  document.addEventListener("afterAuthCheck", (e) => {
+    const { user } = e.detail;
+    const authBtn = document.getElementById("page-header-auth-btn");
+
+    if (!user) {
+      authBtn.classList.remove("hidden");
+      return;
+    }
 
     const nav = document.getElementById("page-header-nav");
-    const authBtn = document.getElementById("page-header-auth-btn");
     nav.removeChild(authBtn);
     nav.insertAdjacentHTML("beforeend", getAuthedUI(user.handle));
 
     const logoutBtn = document.getElementById("logout-btn");
     logoutBtn.addEventListener("click", logout);
-  }
+  });
 </script>
 
 <style webc:scoped="page-header">
@@ -119,6 +125,10 @@
     .at {
       font-weight: 600;
       opacity: 0.5;
+    }
+
+    .hidden {
+      opacity: 0;
     }
   }
 
