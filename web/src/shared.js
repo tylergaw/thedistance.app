@@ -1,9 +1,3 @@
-const API_BASE = window.location.protocol.startsWith("https")
-  ? "https://api.thedistance.app"
-  : "http://127.0.0.1:8000";
-
-const fetchOpts = { credentials: "include" };
-
 let currentUser = null;
 
 function metersToMiles(m) {
@@ -119,7 +113,7 @@ async function loadActivities(container, did, showDelete) {
   }
 
   try {
-    const res = await fetch(url, fetchOpts);
+    const res = await fetch(url, FETCH_OPTS);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const activities = await res.json();
 
@@ -156,7 +150,7 @@ async function handleDelete(e) {
 
   try {
     const res = await fetch(`${API_BASE}/api/activities/${did}/${rkey}`, {
-      ...fetchOpts,
+      ...FETCH_OPTS,
       method: "DELETE",
     });
 
@@ -195,7 +189,7 @@ function renderLoggedIn(handle) {
 async function checkAuth() {
   const container = document.getElementById("auth");
   try {
-    const res = await fetch(`${API_BASE}/oauth/me`, fetchOpts);
+    const res = await fetch(`${API_BASE}/oauth/me`, FETCH_OPTS);
     if (res.ok) {
       currentUser = await res.json();
       container.innerHTML = renderLoggedIn(currentUser.handle);
@@ -213,44 +207,10 @@ async function checkAuth() {
   document.getElementById("login-form").addEventListener("submit", login);
 }
 
-async function login(e) {
-  e.preventDefault();
-  const input = document.getElementById("login-handle");
-  const username = input.value.trim();
-  if (!username) return;
-
-  const btn = e.target.querySelector("button");
-  btn.disabled = true;
-  btn.textContent = "Signing in\u2026";
-
-  try {
-    const res = await fetch(`${API_BASE}/oauth/login`, {
-      ...fetchOpts,
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      alert(err.error || "Login failed");
-      return;
-    }
-
-    const data = await res.json();
-    window.location.href = data.redirect_url;
-  } catch (err) {
-    alert("Login failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Sign in";
-  }
-}
-
 async function logout() {
   try {
     await fetch(`${API_BASE}/oauth/logout`, {
-      ...fetchOpts,
+      ...FETCH_OPTS,
       method: "POST",
     });
   } catch (e) {

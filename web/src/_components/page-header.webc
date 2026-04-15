@@ -12,9 +12,9 @@
   </h1>
 
   <nav>
-    <a href="">About</a>
-    <a href="">Tools</a>
-    <a href="">Log in</a>
+    <a href="/about">About</a>
+    <a href="/tools">Tools</a>
+    <a href="#login" class="btn">Log in / Join</a>
   </nav>
 
   <div id="auth"></div>
@@ -39,8 +39,12 @@
     dinkus {
       --height: 0.5rem;
 
-      > div {
+      > div:not(:nth-child(3)) {
         flex: 1;
+      }
+
+      > div:nth-child(2) {
+        max-width: 1.5rem;
       }
     }
   }
@@ -55,9 +59,9 @@
       border: 1px dotted transparent;
       border-radius: 1rem;
       color: var(--color-foreground);
-      font-size: 1rem;
+      font-size: 0.875rem;
       letter-spacing: -1%;
-      padding: 0.1rem 0.5rem;
+      padding: 0.2rem 0.6rem;
       text-decoration: none;
 
       &:where(:hover, :focus) {
@@ -67,5 +71,11 @@
         );
       }
     }
+  }
+
+  .btn {
+    background: var(--color-accent-primary);
+    color: hsl(var(--color-foreground-hsl-light));
+    font-weight: 500;
   }
 </style>

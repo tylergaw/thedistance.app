@@ -1,40 +1,59 @@
 ---
 layout: layout.webc
 title: The Distance
-script: /app.js
 ---
 
 <home-hero></home-hero>
 
 <div class="home-intro">
-  <dinkus class="intro-dinkus"></dinkus>
-  <p>
-    Track and share physical activities. Cycling, running, walking, hiking.
-    Anything that gets you up and moving.
-  </p>
-  <p>
-    Another sentence or two here to introduce the AT Protocol would be helpful.
-    Doesn’t have to be deep, just enough to provide <a href="">a link</a> to a
-    page that goes into more detail would be great.
-  </p>
+  <div class="intro-contents-container">
+    <div class="intro-contents">
+      <dinkus class="intro-dinkus"></dinkus>
+      <p>
+        Track and share physical activities. Cycling, running, walking, hiking.
+        Anything that gets you up and moving.
+      </p>
+      <p>
+        Another sentence or two here to introduce the AT Protocol would be
+        helpful. Doesn’t have to be deep, just enough to provide
+        <a href="">a link</a> to a page that goes into more detail would be
+        great.
+      </p>
+    </div>
+  </div>
+  <home-auth></home-auth>
 </div>
 
 <div id="activities"></div>
 
 <style>
   .home-intro {
-    padding: 1rem 2.5rem;
-    padding-bottom: 4rem;
+    display: flex;
+    gap: 1.3125rem;
+    flex-wrap: wrap;
+    padding: 2rem 2.5rem;
+    padding-bottom: 20rem;
+  }
+
+  .intro-contents-container {
+    flex: 1;
+  }
+
+  .intro-contents {
+    margin: 0 auto;
+    max-width: var(--grid-max-5);
+    padding: 3rem 0;
 
     p {
       letter-spacing: -1%;
-      line-height: 1.25;
-      margin-top: 1.5rem;
-      font-size: 1.125rem;
+      line-height: 1.4;
+      margin-top: 1.25rem;
+      font-size: 1.25rem;
     }
 
     p:nth-of-type(1) {
-      font-size: 1.875rem;
+      font-size: 2.125rem;
+      line-height: 1.25;
     }
   }
 

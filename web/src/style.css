@@ -127,6 +127,27 @@ h6 {
   /* Font stacks */
   --font-body: "Hanken Grotesk", helvetica, sans-serif;
   --font-display: "Antonio", helvetica, sans-serif;
+
+  /* Grid */
+  --grid-columns: 11;
+  --grid-gutter: 21px;
+  --grid-canvas-max: 1585px;
+  --grid-gutters-total: calc((var(--grid-columns) - 1) * var(--grid-gutter));
+  --grid-columns-total: calc(
+    var(--grid-canvas-max) - var(--grid-gutters-total)
+  );
+  --grid-column-width: calc(var(--grid-columns-total) / var(--grid-columns));
+  --grid-max-1: calc(var(--grid-column-width) * 1 + var(--grid-gutter) * 0);
+  --grid-max-2: calc(var(--grid-column-width) * 2 + var(--grid-gutter) * 1);
+  --grid-max-3: calc(var(--grid-column-width) * 3 + var(--grid-gutter) * 2);
+  --grid-max-4: calc(var(--grid-column-width) * 4 + var(--grid-gutter) * 3);
+  --grid-max-5: calc(var(--grid-column-width) * 5 + var(--grid-gutter) * 4);
+  --grid-max-6: calc(var(--grid-column-width) * 6 + var(--grid-gutter) * 5);
+  --grid-max-7: calc(var(--grid-column-width) * 7 + var(--grid-gutter) * 6);
+  --grid-max-8: calc(var(--grid-column-width) * 8 + var(--grid-gutter) * 7);
+  --grid-max-9: calc(var(--grid-column-width) * 9 + var(--grid-gutter) * 8);
+  --grid-max-10: calc(var(--grid-column-width) * 10 + var(--grid-gutter) * 9);
+  --grid-max-11: var(--grid-canvas-max);
 }
 
 html,

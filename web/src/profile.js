@@ -16,7 +16,7 @@ async function init() {
   try {
     const res = await fetch(
       `${API_BASE}/api/resolve/${encodeURIComponent(handle)}`,
-      fetchOpts
+      FETCH_OPTS
     );
     if (!res.ok) throw new Error("Could not resolve handle");
     const data = await res.json();

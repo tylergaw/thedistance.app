@@ -38,7 +38,7 @@ async function handleUpload(e) {
 
   try {
     const res = await fetch(`${API_BASE}/api/parse`, {
-      ...fetchOpts,
+      ...FETCH_OPTS,
       method: "POST",
       body: formData,
     });
@@ -92,7 +92,7 @@ async function handleCreate() {
   for (const activity of parsedActivities) {
     try {
       const res = await fetch(`${API_BASE}/api/activities`, {
-        ...fetchOpts,
+        ...FETCH_OPTS,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(activity),

@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title @text="title" webc:keep></title>
 
+    <script @raw="`var API_BASE = '${site.apiBase}';`" webc:keep>
+      const FETCH_OPTS = { credentials: "include" };
+    </script>
+
     <link rel="stylesheet" href="/style.css" webc:keep />
     <style @raw="getBundle('css')" webc:keep></style>
   </head>
@@ -12,7 +16,8 @@
     <page-header></page-header>
     <main @raw="content"></main>
 
-    <script src="/shared.js" webc:keep></script>
-    <script :src="script" webc:keep webc:if="script"></script>
+    <script @raw="getBundle('js', 'defer')" webc:keep></script>
+    <script src="/app.js" webc:keep></script>
+    <!--FIXME <script :src="script" webc:keep webc:if="script"></script> -->
   </body>
 </html>

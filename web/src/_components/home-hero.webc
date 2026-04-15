@@ -1,34 +1,35 @@
 <div webc:root>
-  <div class="hero-inner">
+  <div class="inner">
     <picture>
       <source srcset="/images/hero-image-01.avif" type="image/avif" />
       <source srcset="/images/hero-image-01.webp" type="image/webp" />
       <img src="/images/hero-image-01.jpg" alt="" class="hero-image" />
     </picture>
-
     <div class="image-cover"></div>
 
-    <dinkus class="hero-dinkus"></dinkus>
+    <div class="contents">
+      <dinkus class="hero-dinkus"></dinkus>
 
-    <div class="hero-logo">
-      <img
-        class="logo-the"
-        src="/images/logo-the.svg"
-        width="64"
-        height="51"
-        alt="The"
-      />
-      <img
-        class="logo-distance"
-        src="/images/logo-distance.svg"
-        width="1455"
-        height="479"
-        alt="Distance"
-      />
-    </div>
-    <div class="tagline">
-      <dinkus></dinkus>
-      <p>Your progress. Your goals. On the Atmosphere.</p>
+      <div class="logo">
+        <img
+          class="logo-the"
+          src="/images/logo-the.svg"
+          width="64"
+          height="51"
+          alt="The"
+        />
+        <img
+          class="logo-distance"
+          src="/images/logo-distance.svg"
+          width="1455"
+          height="479"
+          alt="Distance"
+        />
+      </div>
+      <div class="tagline">
+        <dinkus></dinkus>
+        <p>Your progress. Your goals. On the Atmosphere.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -39,14 +40,19 @@
     padding: 0 2.5rem;
   }
 
-  .hero-inner {
-    display: flex;
-    flex-direction: column;
+  .inner {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
     padding: 2.5rem;
-    padding-top: 8.125rem;
+    padding-top: 10rem;
+  }
+
+  .contents {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 1400px;
   }
 
   .image-cover {
@@ -69,6 +75,7 @@
 
   .hero-dinkus {
     --height: 3.2rem;
+    --gap: 8px;
     align-self: flex-end;
     margin-bottom: 5.25rem;
     max-width: 37.5rem;
@@ -85,7 +92,7 @@
     }
   }
 
-  .hero-logo {
+  .logo {
     display: flex;
     flex-direction: column;
     mix-blend-mode: overlay;

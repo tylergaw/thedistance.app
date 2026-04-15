@@ -1,0 +1,200 @@
+<div webc:root>
+  <picture>
+    <source srcset="/images/home-auth-bg.avif" type="image/avif" />
+    <source srcset="/images/home-auth-bg.webp" type="image/webp" />
+    <img
+      src="/images/home-auth-bg.jpg"
+      class="bg-image"
+      alt="A bicycle parked on a hilltop overlooking rolling hills with a volcanic peak in the distance."
+    />
+  </picture>
+
+  <fieldset>
+    <form id="login">
+      <p class="title">Log in with your Atmosphere account</p>
+
+      <div class="field">
+        <label for="handle">Atmosphere handle</label>
+        <input
+          id="handle"
+          type="text"
+          name="handle"
+          autocapitalize="off"
+          autocorrect="off"
+          placeholder="yourhandle.bsky.social"
+          required
+        />
+      </div>
+      <button type="submit" class="btn">
+        <dinkus class="hidden"></dinkus>
+        <span>Continue</span>
+      </button>
+    </form>
+  </fieldset>
+</div>
+
+<style webc:scoped>
+  :host {
+    background-color: var(--color-accent-primary);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: var(--grid-max-4);
+    overflow: hidden;
+    padding: 1rem;
+    position: relative;
+  }
+
+  .bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+    mix-blend-mode: overlay;
+  }
+
+  fieldset {
+    align-items: center;
+    border: 2px dotted hsl(var(--color-background-hsl-light));
+    border-radius: 14px;
+    display: flex;
+    color: hsl(var(--color-foreground-hsl-light));
+    flex: 1;
+    justify-content: center;
+    padding: 0 1rem;
+    position: relative;
+  }
+
+  form {
+    margin: 0 auto;
+    max-width: var(--grid-max-3);
+    width: 100%;
+
+    .title {
+      font-size: 1.375rem;
+      font-weight: 500;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      padding: 0 0.5rem;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0 0.5rem;
+    }
+
+    input {
+      appearance: none;
+      background: hsl(var(--color-background-hsl-light));
+      border: 1px solid hsl(var(--color-foreground-hsl-light) / 15%);
+      border-radius: 16px;
+      color: hsl(var(--color-foreground-hsl-light));
+      display: block;
+      flex: 1;
+      font-size: 1.25rem;
+      padding: 0.5rem 0.75rem;
+    }
+  }
+
+  .btn {
+    align-items: center;
+    appearance: none;
+    background-color: hsl(var(--color-foreground-hsl-light));
+    border: 0;
+    border-radius: 16px;
+    color: var(--color-accent-primary);
+    cursor: pointer;
+    display: grid;
+    justify-content: center;
+    line-height: 1;
+    padding: 0.65rem 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    text-box-trim: trim-end;
+    text-transform: uppercase;
+    width: 100%;
+  }
+
+  .btn > * {
+    grid-area: 1 / 1;
+  }
+
+  .btn dinkus {
+    --height: 0.7rem;
+    margin-top: 0.25rem;
+    pointer-events: none;
+
+    > div:not(:nth-child(3)) {
+      flex: 1;
+    }
+
+    > div:nth-child(2) {
+      max-width: 1.2rem;
+    }
+  }
+
+  .btn .hidden {
+    opacity: 0;
+  }
+
+  .field + .btn {
+    margin-top: 0.5rem;
+  }
+</style>
+
+<script webc:bucket="defer">
+  async function login(e) {
+    e.preventDefault();
+    const input = document.getElementById("handle");
+    const handle = input.value.trim();
+    if (!handle) return;
+
+    const btn = e.target.querySelector("button");
+    btn.disabled = true;
+
+    const btnText = btn.querySelector("span");
+    btnText.classList.add("hidden");
+
+    const indicator = btn.querySelector("dinkus");
+    indicator.classList.remove("hidden");
+
+    try {
+      const res = await fetch(`${API_BASE}/oauth/login`, {
+        ...FETCH_OPTS,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: handle }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        // FIXME: Do this properly
+        alert(err.error || "Login failed");
+        return;
+      }
+
+      const data = await res.json();
+      window.location.href = data.redirect_url;
+    } catch (err) {
+      alert("Login failed: " + err.message);
+    } finally {
+      btn.disabled = false;
+      btnText.classList.remove("hidden");
+      indicator.classList.add("hidden");
+    }
+  }
+
+  const form = document.getElementById("login");
+  form.addEventListener("submit", login);
+</script>
