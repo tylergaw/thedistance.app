@@ -11,14 +11,40 @@
     </a>
   </h1>
 
-  <nav>
+  <nav id="page-header-nav">
     <a href="/about">About</a>
-    <a href="/tools">Tools</a>
-    <a href="#login" class="btn">Log in / Join</a>
+    <a href="#login" class="btn" id="page-header-auth-btn">Log in / Join</a>
   </nav>
-
-  <div id="auth"></div>
 </header>
+
+<script webc:bucket="components">
+  async function logout() {
+    try {
+      await fetch(`${API_BASE}/oauth/logout`, {
+        ...FETCH_OPTS,
+        method: "POST",
+      });
+    } catch {
+      // Continue with local cleanup even if server call fails
+    }
+    window.location.href = "/";
+  }
+
+  function getAuthedUI(handle) {
+    return `<span class="divider">|</span> <a href="/upload">Upload</a> <a href="/profile/${handle}"><b class="at">@</b>${handle}</a>
+    <button id="logout-btn" type="button">Log out</button>`;
+  }
+
+  function renderPageHeader(props) {
+    const nav = document.getElementById("page-header-nav");
+    const authBtn = document.getElementById("page-header-auth-btn");
+    nav.removeChild(authBtn);
+    nav.insertAdjacentHTML("beforeend", getAuthedUI(user.handle));
+
+    const logoutBtn = document.getElementById("logout-btn");
+    logoutBtn.addEventListener("click", logout);
+  }
+</script>
 
 <style webc:scoped="page-header">
   :host {
@@ -50,12 +76,13 @@
   }
 
   nav {
-    column-gap: 0.5rem;
+    column-gap: 0.25rem;
     display: flex;
     justify-content: flex-end;
     flex: 1;
 
-    a {
+    a,
+    button {
       border: 1px dotted transparent;
       border-radius: 1rem;
       color: var(--color-foreground);
@@ -70,6 +97,23 @@
           hsl(var(--color-foreground-hsl-dark) / 25%)
         );
       }
+    }
+
+    button {
+      appearance: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .divider {
+      font-size: 0.875rem;
+      padding: 0.2rem 0;
+      opacity: 0.5;
+    }
+
+    .at {
+      font-weight: 600;
+      opacity: 0.5;
     }
   }
 

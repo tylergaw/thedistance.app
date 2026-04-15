@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" style="color-scheme: light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title @text="title" webc:keep></title>
 
-    <script @raw="`var API_BASE = '${site.apiBase}';`" webc:keep>
+    <script @raw="`const API_BASE = '${site.apiBase}';`" webc:keep>
       const FETCH_OPTS = { credentials: "include" };
     </script>
 
@@ -16,8 +16,9 @@
     <page-header></page-header>
     <main @raw="content"></main>
 
-    <script @raw="getBundle('js', 'defer')" webc:keep></script>
     <script src="/app.js" webc:keep></script>
+
+    <script @raw="getBundle('js', 'components')" webc:keep></script>
     <!--FIXME <script :src="script" webc:keep webc:if="script"></script> -->
   </body>
 </html>

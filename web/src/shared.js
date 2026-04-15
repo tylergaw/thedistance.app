@@ -1,5 +1,3 @@
-let currentUser = null;
-
 function metersToMiles(m) {
   return (parseFloat(m) / 1609.344).toFixed(1);
 }
@@ -169,53 +167,4 @@ async function handleDelete(e) {
     btn.disabled = false;
     btn.textContent = "Delete";
   }
-}
-
-// --- Auth ---
-
-function renderLoginForm() {
-  return `<form id="login-form">
-    <input type="text" id="login-handle" placeholder="Handle (e.g. alice.bsky.social)" />
-    <button type="submit">Sign in</button>
-  </form>`;
-}
-
-function renderLoggedIn(handle) {
-  return `<a href="/profile/${handle}" class="auth-handle">${handle}</a>
-    <a href="/upload">Upload</a>
-    <button id="logout-btn" type="button">Sign out</button>`;
-}
-
-async function checkAuth() {
-  const container = document.getElementById("auth");
-  try {
-    const res = await fetch(`${API_BASE}/oauth/me`, FETCH_OPTS);
-    if (res.ok) {
-      currentUser = await res.json();
-      container.innerHTML = renderLoggedIn(currentUser.handle);
-      document.getElementById("logout-btn").addEventListener("click", logout);
-      return;
-    }
-  } catch (e) {
-    // Not logged in
-  }
-  currentUser = null;
-
-  if (!container) return;
-
-  container.innerHTML = renderLoginForm();
-  document.getElementById("login-form").addEventListener("submit", login);
-}
-
-async function logout() {
-  try {
-    await fetch(`${API_BASE}/oauth/logout`, {
-      ...FETCH_OPTS,
-      method: "POST",
-    });
-  } catch (e) {
-    // Continue with local cleanup even if server call fails
-  }
-  currentUser = null;
-  window.location.href = "/";
 }
