@@ -203,12 +203,13 @@
 
   document.addEventListener("afterAuthCheck", (e) => {
     const { user } = e.detail;
+    const form = document.getElementById("login");
+
     if (!user) {
       form.addEventListener("submit", login);
       return;
     }
 
-    const form = document.getElementById("login");
     form.classList.add("hidden");
   });
 </script>

@@ -89,17 +89,22 @@
     padding: 0.35rem;
     text-decoration: none;
 
-    &:where(:hover, :focus) {
+    &:where(:hover, :focus-visible) {
       border-color: light-dark(
         hsl(var(--color-foreground-hsl-light) / 25%),
         hsl(var(--color-foreground-hsl-dark) / 25%)
       );
+
+      svg {
+        rotate: -10deg;
+      }
     }
 
     svg {
       display: block;
       grid-area: 1 / 1;
       height: auto;
+      transition: transform 0.1s ease;
       width: 1rem;
     }
 

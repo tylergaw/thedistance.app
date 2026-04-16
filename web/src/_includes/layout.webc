@@ -17,8 +17,6 @@
     <main @raw="content"></main>
 
     <script src="/app.js" webc:keep></script>
-
     <script @raw="getBundle('js', 'components')" webc:keep></script>
-    <!--FIXME <script :src="script" webc:keep webc:if="script"></script> -->
   </body>
 </html>

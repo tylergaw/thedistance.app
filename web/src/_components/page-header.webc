@@ -49,7 +49,7 @@
     }
 
     const nav = document.getElementById("page-header-nav");
-    nav.removeChild(authBtn);
+    authBtn.remove();
     nav.insertAdjacentHTML("beforeend", getAuthedUI(user.handle));
 
     const logoutBtn = document.getElementById("logout-btn");
@@ -102,7 +102,7 @@
       padding: 0.2rem 0.6rem;
       text-decoration: none;
 
-      &:where(:hover, :focus) {
+      &:where(:hover, :focus-visible) {
         border-color: light-dark(
           hsl(var(--color-foreground-hsl-light) / 25%),
           hsl(var(--color-foreground-hsl-dark) / 25%)

@@ -1,12 +1,63 @@
 ---
 layout: layout.webc
 title: Profile - The Distance
-script: /profile.js
 ---
 
 <div class="g-max-centered">
-  <h1>Profile</h1>
+  <div class="contents">
+    <h2 id="profile-handle">&nbsp;</h2>
+    <activity-list id="profile-activities" loading></activity-list>
+  </div>
 </div>
 
-<h2 id="profile-handle"></h2>
-<div id="activities"></div>
+<style webc:scoped>
+  .contents {
+    margin: 0 auto;
+    max-width: var(--grid-max-5);
+    padding-bottom: 2rem;
+  }
+</style>
+
+<script webc:bucket="components">
+  const [_, rawHandle] = window.location.pathname.split("/profile/");
+  const requestedHandle = rawHandle.replaceAll("/", "");
+  const title = document.getElementById("profile-handle");
+
+  async function renderProfile({ user }) {
+    title.textContent = `@${user.handle}`;
+    document.title = `@${user.handle} is Going The Distance`;
+
+    const { data } = await getActivities(user.did);
+    const list = document.getElementById("profile-activities");
+    list.activities = data;
+
+    // FIXME: Do something with this or remove
+    // if (user) {
+    //   const isOwner = user.did === did;
+    //   list.editable = isOwner;
+    // }
+  }
+
+  document.addEventListener("afterAuthCheck", (e) => {
+    const { user } = e.detail;
+
+    if (user) {
+      const requestedIsCurrent = user.handle === requestedHandle;
+
+      if (requestedIsCurrent) {
+        renderProfile({ user });
+        return;
+      }
+    }
+
+    lookupHandle(requestedHandle).then((foundUser) => {
+      if (!foundUser) {
+        title.textContent = `Couldn’t find an @${requestedHandle}`;
+        document.title = "The Distance";
+        return;
+      }
+
+      renderProfile({ user: foundUser });
+    });
+  });
+</script>

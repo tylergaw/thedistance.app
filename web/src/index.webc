@@ -24,9 +24,6 @@ title: The Distance
   <home-auth></home-auth>
 </div>
 
-<!-- FIXME -->
-<div id="activities"></div>
-
 <style>
   .home-intro {
     display: flex;
