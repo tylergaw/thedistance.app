@@ -5,6 +5,7 @@ export default function (eleventyConfig) {
     components: "src/_components/**/*.webc",
   });
 
+  eleventyConfig.addPassthroughCopy("src/favicon.ico");
   eleventyConfig.addPassthroughCopy("src/**/*.js");
   eleventyConfig.addPassthroughCopy("src/**/*.css");
   eleventyConfig.addPassthroughCopy("src/fonts");
