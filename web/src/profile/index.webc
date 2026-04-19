@@ -29,6 +29,7 @@ title: Profile - The Distance
 
     const { data } = await getActivities(user.did);
     const list = document.getElementById("profile-activities");
+    list.handle = user.handle;
     list.activities = data;
 
     // FIXME: Do something with this or remove

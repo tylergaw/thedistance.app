@@ -67,7 +67,7 @@
                 <header class="activity-header">
                   <time>${formatDate(activity.started_at)}</time>
 
-                  <a href="/profile/${activity.did}/activities/${
+                  <a href="/profile/${this.handle || activity.did}/activity/${
               activity.rkey
             }">${
               activity.title ||

@@ -79,6 +79,34 @@ async function getActivities(did) {
 }
 
 /**
+ * @param {string} did
+ * @param {string} rkey
+ * @returns {Promise<{data: Object|null, error: string|null}>}
+ */
+async function getActivity(did, rkey) {
+  const url = `${API_BASE}/api/activities/${encodeURIComponent(did)}/${encodeURIComponent(rkey)}`;
+
+  try {
+    const res = await fetch(url, FETCH_OPTS);
+    if (!res.ok)
+      return {
+        data: null,
+        error: `HTTP ${res.status}`,
+      };
+    const data = await res.json();
+    return {
+      data,
+      error: null,
+    };
+  } catch (err) {
+    return {
+      data: null,
+      error: err.message,
+    };
+  }
+}
+
+/**
  * @param {string} type
  * @returns {string}
  */
