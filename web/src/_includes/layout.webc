@@ -9,6 +9,7 @@
       const FETCH_OPTS = { credentials: "include" };
     </script>
 
+    <link rel="stylesheet" href="/vendor/maplibre-gl.css" webc:keep />
     <link rel="stylesheet" href="/style.css" webc:keep />
     <style @raw="getBundle('css')" webc:keep></style>
   </head>
@@ -16,6 +17,7 @@
     <page-header :login-href="page.url === '/' ? '#login' : '/login'"></page-header>
     <main @raw="content"></main>
 
+    <script src="/vendor/maplibre-gl.js" webc:keep></script>
     <script src="/app.js" webc:keep></script>
     <script @raw="getBundle('js', 'components')" webc:keep></script>
   </body>

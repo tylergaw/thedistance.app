@@ -9,6 +9,10 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/**/*.css");
   eleventyConfig.addPassthroughCopy("src/fonts");
   eleventyConfig.addPassthroughCopy("src/images");
+  eleventyConfig.addPassthroughCopy({
+    "node_modules/maplibre-gl/dist/maplibre-gl.js": "vendor/maplibre-gl.js",
+    "node_modules/maplibre-gl/dist/maplibre-gl.css": "vendor/maplibre-gl.css",
+  });
 
   eleventyConfig.setServerOptions({
     domDiff: false,
