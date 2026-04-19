@@ -1,16 +1,150 @@
 ---
 layout: layout.webc
 title: Upload - The Distance
-script: /upload.js
 ---
 
 <div class="g-max-centered">
   <h2>Upload Activities</h2>
   <p>Supported formats: FIT</p>
-  <form id="upload-form">
+  <form id="upload-form" class="hidden">
     <input type="file" id="file-input" accept=".fit" multiple />
     <button type="submit">Upload</button>
   </form>
   <div id="upload-error"></div>
-  <div id="preview"></div>
+  <div id="upload-status"></div>
+  <activity-list id="upload-preview"></activity-list>
 </div>
+
+<script webc:bucket="components">
+  let parsedActivities = [];
+  let uploadUser = null;
+
+  document.addEventListener("afterAuthCheck", (e) => {
+    const { user } = e.detail;
+    const form = document.getElementById("upload-form");
+    const errorContainer = document.getElementById("upload-error");
+
+    if (!user) {
+      errorContainer.innerHTML =
+        '<p class="error">You must be signed in to upload activities.</p>';
+      return;
+    }
+
+    uploadUser = user;
+    form.classList.remove("hidden");
+    form.addEventListener("submit", handleUpload);
+  });
+
+  async function handleUpload(e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById("file-input");
+    const files = fileInput.files;
+
+    if (files.length === 0) return;
+
+    const errorContainer = document.getElementById("upload-error");
+    const statusContainer = document.getElementById("upload-status");
+    const list = document.getElementById("upload-preview");
+    const btn = e.target.querySelector("button");
+
+    errorContainer.innerHTML = "";
+    statusContainer.innerHTML = '<p class="loading">Parsing files\u2026</p>';
+    btn.disabled = true;
+
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("files", file);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/parse`, {
+        ...FETCH_OPTS,
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        errorContainer.innerHTML = `<p class="error">${
+          err.error || "Upload failed"
+        }</p>`;
+        statusContainer.innerHTML = "";
+        return;
+      }
+
+      const data = await res.json();
+      const activities = data.activities;
+
+      if (activities.length === 0) {
+        statusContainer.innerHTML =
+          "<p>No activities found in uploaded files.</p>";
+        return;
+      }
+
+      parsedActivities = activities;
+      statusContainer.innerHTML = "";
+
+      list.handle = uploadUser.handle;
+      list.activities = activities;
+
+      list.insertAdjacentHTML(
+        "afterend",
+        '<button id="create-btn" type="button">Create Records</button>'
+      );
+
+      document
+        .getElementById("create-btn")
+        .addEventListener("click", handleCreate);
+    } catch (err) {
+      errorContainer.innerHTML = `<p class="error">${err.message}</p>`;
+      statusContainer.innerHTML = "";
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function handleCreate() {
+    const btn = document.getElementById("create-btn");
+    const errorContainer = document.getElementById("upload-error");
+
+    btn.disabled = true;
+    btn.textContent = "Creating\u2026";
+    errorContainer.innerHTML = "";
+
+    const errors = [];
+
+    for (const activity of parsedActivities) {
+      try {
+        const res = await fetch(`${API_BASE}/api/activities`, {
+          ...FETCH_OPTS,
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(activity),
+        });
+
+        if (!res.ok) {
+          try {
+            const err = await res.json();
+            errors.push(err.error || "Create failed");
+          } catch {
+            errors.push(`Create failed (HTTP ${res.status})`);
+          }
+        }
+      } catch (err) {
+        errors.push(err.message);
+      }
+    }
+
+    if (errors.length > 0) {
+      errorContainer.innerHTML = errors
+        .map((e) => `<p class="error">${e}</p>`)
+        .join("");
+      btn.disabled = false;
+      btn.textContent = "Create Records";
+      return;
+    }
+
+    window.location.href = `/profile/${uploadUser.handle}`;
+  }
+</script>

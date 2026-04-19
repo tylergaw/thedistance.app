@@ -30,7 +30,7 @@
         this.setAttribute("loading", "");
       } else {
         this.removeAttribute("loading");
-        this.querySelector(".loading-indicator").remove();
+        this.querySelector(".loading-indicator")?.remove();
       }
     }
 
