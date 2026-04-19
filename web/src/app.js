@@ -154,6 +154,47 @@ function formatDuration(seconds) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+/**
+ * Decode a Google encoded polyline string into an array of [lng, lat] pairs.
+ * @param {string} encoded
+ * @returns {Array<[number, number]>}
+ */
+function decodePolyline(encoded) {
+  const coords = [];
+  let i = 0;
+  let lat = 0;
+  let lng = 0;
+
+  while (i < encoded.length) {
+    let shift = 0;
+    let result = 0;
+    let byte;
+
+    do {
+      byte = encoded.charCodeAt(i++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20);
+
+    lat += result & 1 ? ~(result >> 1) : result >> 1;
+
+    shift = 0;
+    result = 0;
+
+    do {
+      byte = encoded.charCodeAt(i++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20);
+
+    lng += result & 1 ? ~(result >> 1) : result >> 1;
+
+    coords.push([lng / 1e5, lat / 1e5]);
+  }
+
+  return coords;
+}
+
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-US", {
     weekday: "short",

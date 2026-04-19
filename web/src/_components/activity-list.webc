@@ -86,9 +86,7 @@
                 </div>
               </header>
 
-              <div class="activity-map">
-                <p><b>Map here soon:</b> ${activity.polyline}</p>
-              </div>
+              <div class="activity-map" data-rkey="${activity.rkey}"></div>
             </div>
           </li>`;
           })
@@ -96,7 +94,54 @@
       </ul>`;
 
       this.insertAdjacentHTML("beforeend", activitiesHTML);
-      console.log(data);
+      this.initMaps(data);
+    }
+
+    initMaps(data) {
+      const activitiesByRkey = Object.fromEntries(data.map((a) => [a.rkey, a]));
+
+      this.querySelectorAll(".activity-map").forEach((el) => {
+        const activity = activitiesByRkey[el.dataset.rkey];
+        if (!activity?.polyline) return;
+
+        const coords = decodePolyline(activity.polyline);
+        if (coords.length === 0) return;
+
+        const bounds = coords.reduce(
+          (b, coord) => b.extend(coord),
+          new maplibregl.LngLatBounds(coords[0], coords[0])
+        );
+
+        const map = new maplibregl.Map({
+          container: el,
+          style: "https://tiles.openfreemap.org/styles/positron",
+          bounds: bounds,
+          fitBoundsOptions: { padding: 40 },
+        });
+
+        map.on("load", () => {
+          map.addSource("route", {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: coords,
+              },
+            },
+          });
+
+          map.addLayer({
+            id: "route",
+            type: "line",
+            source: "route",
+            paint: {
+              "line-color": "#FFE866",
+              "line-width": 4,
+            },
+          });
+        });
+      });
     }
   }
 
@@ -209,15 +254,6 @@ async function handleDelete(e) {
   }
 
   .activity-map {
-    background: color-mix(in srgb, currentColor 5%, transparent);
-    overflow: hidden;
-
-    p {
-      padding: 8rem 3rem;
-      opacity: 0.5;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+    height: 300px;
   }
 </style>
