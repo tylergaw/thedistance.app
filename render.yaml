@@ -63,9 +63,3 @@ projects:
               - type: rewrite
                 source: /profile/*
                 destination: /profile/index.html
-              - type: rewrite
-                source: /upload
-                destination: /upload/index.html
-              - type: rewrite
-                source: /about
-                destination: /about/index.html

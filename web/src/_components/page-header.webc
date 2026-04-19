@@ -13,7 +13,7 @@
 
   <nav id="page-header-nav">
     <a href="/about">About</a>
-    <a href="#login" class="btn hidden" id="page-header-auth-btn"
+    <a :href="loginHref" class="btn hidden" id="page-header-auth-btn"
       >Log in / Join</a
     >
   </nav>

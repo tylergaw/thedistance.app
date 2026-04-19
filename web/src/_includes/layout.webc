@@ -13,7 +13,7 @@
     <style @raw="getBundle('css')" webc:keep></style>
   </head>
   <body>
-    <page-header></page-header>
+    <page-header :login-href="page.url === '/' ? '#login' : '/login'"></page-header>
     <main @raw="content"></main>
 
     <script src="/app.js" webc:keep></script>
