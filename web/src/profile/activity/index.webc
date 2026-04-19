@@ -1,0 +1,66 @@
+---
+layout: layout.webc
+title: Activity - The Distance
+---
+
+<div class="g-max-centered">
+  <div class="contents">
+    <activity-list id="activity-detail" loading></activity-list>
+  </div>
+</div>
+
+<style webc:scoped>
+  .contents {
+    margin: 0 auto;
+    max-width: var(--grid-max-5);
+    padding-bottom: 2rem;
+  }
+</style>
+
+<script webc:bucket="components">
+  // URL: /profile/<did-or-handle>/activity/<rkey>/
+  const activityPathMatch = window.location.pathname.match(
+    /\/profile\/([^/]+)\/activity\/([^/]+)/
+  );
+  const activityIdentifier = activityPathMatch ? activityPathMatch[1] : null;
+  const activityRkey = activityPathMatch ? activityPathMatch[2] : null;
+  const activityIdentifierIsDid = activityIdentifier && activityIdentifier.startsWith("did:");
+
+  async function renderActivity(did, handle) {
+    const { data, error } = await getActivity(did, activityRkey);
+    const list = document.getElementById("activity-detail");
+
+    if (error || !data) {
+      list.loading = false;
+      list.insertAdjacentHTML("beforeend", "<p>Activity not found</p>");
+      return;
+    }
+
+    list.handle = handle;
+    list.activities = [data];
+  }
+
+  document.addEventListener("afterAuthCheck", (e) => {
+    const { user } = e.detail;
+
+    if (activityIdentifierIsDid) {
+      const handle = user && user.did === activityIdentifier ? user.handle : null;
+      renderActivity(activityIdentifier, handle);
+    } else {
+      // Identifier is a handle, resolve to DID
+      if (user && user.handle === activityIdentifier) {
+        renderActivity(user.did, user.handle);
+      } else {
+        lookupHandle(activityIdentifier).then((foundUser) => {
+          if (!foundUser) {
+            const list = document.getElementById("activity-detail");
+            list.loading = false;
+            list.insertAdjacentHTML("beforeend", "<p>Activity not found</p>");
+            return;
+          }
+          renderActivity(foundUser.did, foundUser.handle);
+        });
+      }
+    }
+  });
+</script>

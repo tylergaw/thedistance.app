@@ -1,0 +1,223 @@
+<script webc:bucket="components">
+  class ActivityList extends HTMLElement {
+    connectedCallback() {
+      if (this.loading) {
+        this.insertAdjacentHTML(
+          "beforeend",
+          `<p class="loading-indicator">Looking for <s>love</s>activities in all the wrong places…</p>`
+        );
+      }
+    }
+
+    get editable() {
+      return this.hasAttribute("editable");
+    }
+
+    set editable(value) {
+      if (value) {
+        this.setAttribute("editable", "");
+      } else {
+        this.removeAttribute("editable");
+      }
+    }
+
+    get loading() {
+      return this.hasAttribute("loading");
+    }
+
+    set loading(value) {
+      if (value) {
+        this.setAttribute("loading", "");
+      } else {
+        this.removeAttribute("loading");
+        this.querySelector(".loading-indicator").remove();
+      }
+    }
+
+    set activities(data) {
+      this.loading = false;
+
+      if (data.length === 0) {
+        this.insertAdjacentHTML("beforeend", "<p>No Activities yet</p>");
+        return;
+      }
+
+      // https://bsky.app/profile/jamellebouie.net/post/3mjkzfkmvvs2g
+      const activitiesHTML = `
+      <ul>
+        ${data
+          .map((activity) => {
+            const stats = [
+              {
+                label: "Distance",
+                value: `${metersToMiles(activity.distance)} mi`,
+              },
+              {
+                label: "Moving Time",
+                value: `${formatDuration(activity.moving_time)}`,
+              },
+              {
+                label: "Elev Gain",
+                value: `${metersToFeet(activity.elevation_gain)} ft`,
+              },
+            ];
+
+            return `<li>
+              <div class="activity" id="activity-${activity.rkey}">
+                <header class="activity-header">
+                  <time>${formatDate(activity.started_at)}</time>
+
+                  <a href="/profile/${this.handle || activity.did}/activity/${
+              activity.rkey
+            }">${
+              activity.title ||
+              `Untitled ${getActivityTypeDisplayName(activity.sport_type)}`
+            }</a>
+                <div class="activity-stats">
+                  ${stats
+                    .map((s) => {
+                      return `
+                        <div>
+                          <div class="stat-label">${s.label}</div>
+                          <div class="stat-value">${s.value}</div>
+                        </div>`;
+                    })
+                    .join("")}
+                </div>
+              </header>
+
+              <div class="activity-map">
+                <p><b>Map here soon:</b> ${activity.polyline}</p>
+              </div>
+            </div>
+          </li>`;
+          })
+          .join("")}
+      </ul>`;
+
+      this.insertAdjacentHTML("beforeend", activitiesHTML);
+      console.log(data);
+    }
+  }
+
+  customElements.define("activity-list", ActivityList);
+
+  /*
+FIXME: Re implement delete
+
+  const deleteBtn = showDelete
+    ? `<form class="delete-form" data-did="${activity.did}" data-rkey="${activity.rkey}">
+        <button type="submit" class="delete-btn">Delete</button>
+      </form>`
+    : "";
+}
+
+async function handleDelete(e) {
+  e.preventDefault();
+  const form = e.target;
+  const did = form.dataset.did;
+  const rkey = form.dataset.rkey;
+  const btn = form.querySelector("button");
+
+  if (!confirm("Delete this activity?")) return;
+
+  btn.disabled = true;
+  btn.textContent = "Deleting\u2026";
+
+  try {
+    const res = await fetch(`${API_BASE}/api/activities/${did}/${rkey}`, {
+      ...FETCH_OPTS,
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      alert(err.error || "Delete failed");
+      btn.disabled = false;
+      btn.textContent = "Delete";
+      return;
+    }
+
+    const article = document.getElementById(`activity-${rkey}`);
+    if (article) article.remove();
+  } catch (err) {
+    alert("Delete failed: " + err.message);
+    btn.disabled = false;
+    btn.textContent = "Delete";
+  }
+}
+  */
+</script>
+
+<style webc:scoped>
+  :host {
+    display: block;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.25rem;
+  }
+
+  .activity {
+    border: 1px dotted color-mix(in srgb, currentColor 20%, transparent);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .activity-header {
+    padding: 1.5rem;
+
+    time {
+      display: block;
+      font-size: 0.875rem;
+      line-height: 1;
+    }
+
+    a {
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+  }
+
+  .activity-stats {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    max-width: 50ch;
+    column-gap: 0.5rem;
+    row-gap: 1rem;
+
+    > div {
+      flex: 1;
+      min-width: 10ch;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      line-height: 1;
+    }
+
+    .stat-value {
+      font-size: 1.125rem;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+  }
+
+  .activity-map {
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    overflow: hidden;
+
+    p {
+      padding: 8rem 3rem;
+      opacity: 0.5;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+</style>

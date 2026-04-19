@@ -1,0 +1,23 @@
+<div webc:root>
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<style webc:scoped>
+  :host {
+    --height: 1rem;
+    --gap: 4px;
+    display: flex;
+    column-gap: var(--gap);
+  }
+
+  :host > div {
+    background-color: var(--bg-color, var(--color-accent-primary));
+    border: 2px var(--border, solid) var(--color-accent-primary);
+    border-radius: var(--height);
+    height: var(--height);
+    min-width: var(--height);
+    width: var(--height);
+  }
+</style>

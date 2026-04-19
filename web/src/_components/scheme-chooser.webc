@@ -1,0 +1,115 @@
+<button>
+  <svg
+    class="icon-light"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-label="Light scheme"
+  >
+    <path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656" />
+    <path d="M6.343 17.657l-1.414 1.414" />
+    <path d="M6.343 6.343l-1.414 -1.414" />
+    <path d="M17.657 6.343l1.414 -1.414" />
+    <path d="M17.657 17.657l1.414 1.414" />
+    <path d="M4 12h-2" />
+    <path d="M12 4v-2" />
+    <path d="M20 12h2" />
+    <path d="M12 20v2" />
+  </svg>
+
+  <svg
+    class="icon-dark"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-label="Dark scheme"
+  >
+    <path
+      d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"
+    />
+  </svg>
+</button>
+
+<script webc:bucket="components">
+  const STORAGE_KEY = "settings:colorScheme";
+
+  function getScheme() {
+    return localStorage.getItem(STORAGE_KEY) || "light";
+  }
+
+  function applyScheme(scheme) {
+    document.documentElement.style.colorScheme = scheme;
+    document.querySelectorAll("scheme-chooser button").forEach((btn) => {
+      btn
+        .querySelector(".icon-light")
+        .classList.toggle("hidden", scheme !== "dark");
+      btn
+        .querySelector(".icon-dark")
+        .classList.toggle("hidden", scheme === "dark");
+    });
+  }
+
+  function toggleScheme(e) {
+    e.preventDefault();
+    const next = getScheme() === "light" ? "dark" : "light";
+    localStorage.setItem(STORAGE_KEY, next);
+    applyScheme(next);
+  }
+
+  // Apply stored preference on load
+  applyScheme(getScheme());
+
+  document.querySelectorAll("scheme-chooser button").forEach((btn) => {
+    btn.addEventListener("click", toggleScheme);
+  });
+</script>
+
+<style webc:scoped>
+  button {
+    appearance: none;
+    background: none;
+    cursor: pointer;
+    border: 1px dotted transparent;
+    border-radius: 1rem;
+    display: grid;
+    color: var(--color-foreground);
+    font-size: 0.875rem;
+    padding: 0.35rem;
+    text-decoration: none;
+
+    &:where(:hover, :focus-visible) {
+      border-color: light-dark(
+        hsl(var(--color-foreground-hsl-light) / 25%),
+        hsl(var(--color-foreground-hsl-dark) / 25%)
+      );
+
+      svg {
+        rotate: -10deg;
+      }
+    }
+
+    svg {
+      display: block;
+      grid-area: 1 / 1;
+      height: auto;
+      transition: transform 0.1s ease;
+      width: 1rem;
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+  }
+</style>

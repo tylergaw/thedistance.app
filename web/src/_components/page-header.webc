@@ -1,0 +1,140 @@
+<header webc:root="override" class="g-max-centered">
+  <h1>
+    <a href="/">
+      <img
+        src="/images/logo-small-distance.svg"
+        alt="Distance"
+        width="113"
+        height="32"
+      />
+      <dinkus></dinkus>
+    </a>
+  </h1>
+
+  <nav id="page-header-nav">
+    <a href="/about">About</a>
+    <a :href="loginHref" class="btn hidden" id="page-header-auth-btn"
+      >Log in / Join</a
+    >
+  </nav>
+
+  <scheme-chooser></scheme-chooser>
+</header>
+
+<script webc:bucket="components">
+  async function logout() {
+    try {
+      await fetch(`${API_BASE}/oauth/logout`, {
+        ...FETCH_OPTS,
+        method: "POST",
+      });
+    } catch {
+      // Continue with local cleanup even if server call fails
+    }
+    window.location.href = "/";
+  }
+
+  function getAuthedUI(handle) {
+    return `<span class="divider">|</span> <a href="/upload">Upload</a> <a href="/profile/${handle}"><b class="at">@</b>${handle}</a>
+    <button id="logout-btn" type="button">Log out</button>`;
+  }
+
+  document.addEventListener("afterAuthCheck", (e) => {
+    const { user } = e.detail;
+    const authBtn = document.getElementById("page-header-auth-btn");
+
+    if (!user) {
+      authBtn.classList.remove("hidden");
+      return;
+    }
+
+    const nav = document.getElementById("page-header-nav");
+    authBtn.remove();
+    nav.insertAdjacentHTML("beforeend", getAuthedUI(user.handle));
+
+    const logoutBtn = document.getElementById("logout-btn");
+    logoutBtn.addEventListener("click", logout);
+  });
+</script>
+
+<style webc:scoped="page-header">
+  :host {
+    align-items: center;
+    column-gap: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.2rem 3.25rem 1rem 3.25rem;
+  }
+
+  h1 {
+    a {
+      display: flex;
+      flex-direction: column;
+      row-gap: 0.25rem;
+    }
+
+    dinkus {
+      --height: 0.5rem;
+
+      > div:not(:nth-child(3)) {
+        flex: 1;
+      }
+
+      > div:nth-child(2) {
+        max-width: 1.5rem;
+      }
+    }
+  }
+
+  nav {
+    column-gap: 0.25rem;
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+
+    a,
+    button {
+      border: 1px dotted transparent;
+      border-radius: 1rem;
+      color: var(--color-foreground);
+      font-size: 0.875rem;
+      letter-spacing: -1%;
+      padding: 0.2rem 0.6rem;
+      text-decoration: none;
+
+      &:where(:hover, :focus-visible) {
+        border-color: light-dark(
+          hsl(var(--color-foreground-hsl-light) / 25%),
+          hsl(var(--color-foreground-hsl-dark) / 25%)
+        );
+      }
+    }
+
+    button {
+      appearance: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .divider {
+      font-size: 0.875rem;
+      padding: 0.2rem 0;
+      opacity: 0.5;
+    }
+
+    .at {
+      font-weight: 600;
+      opacity: 0.5;
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+  }
+
+  .btn {
+    background: var(--color-accent-primary);
+    color: hsl(var(--color-foreground-hsl-light));
+    font-weight: 500;
+  }
+</style>

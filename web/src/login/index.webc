@@ -1,14 +1,12 @@
 ---
 layout: layout.webc
-title: The Distance
+title: Log in - The Distance
 ---
 
-<home-hero></home-hero>
-
-<div class="home-intro g-max-centered">
-  <div class="intro-contents-container">
-    <div class="intro-contents">
-      <dinkus class="intro-dinkus"></dinkus>
+<div class="auth-page g-max-centered">
+  <div class="contents-container">
+    <div class="contents">
+      <dinkus></dinkus>
       <p>
         Track and share physical activities. Cycling, running, walking, hiking.
         Anything that gets you up and moving.
@@ -25,22 +23,23 @@ title: The Distance
 </div>
 
 <style>
-  .home-intro {
+  .auth-page {
     display: flex;
     gap: 1.3125rem;
     flex-wrap: wrap;
-    padding-top: 2rem;
-    padding-bottom: 20rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
   }
 
-  .intro-contents-container {
+  .contents-container {
     flex: 1;
   }
 
-  .intro-contents {
+  .contents {
     margin: 0 auto;
     max-width: var(--grid-max-5);
     padding: 3rem 0;
+    width: 100%;
 
     p {
       letter-spacing: -1%;
@@ -53,18 +52,18 @@ title: The Distance
       font-size: 2.125rem;
       line-height: 1.25;
     }
-  }
 
-  .intro-dinkus {
-    max-width: 7.8125rem;
+    dinkus {
+      max-width: 7.8125rem;
 
-    > div:nth-child(1) {
-      flex: 1;
-      max-width: 2.1875rem;
-    }
+      > div:nth-child(1) {
+        flex: 1;
+        max-width: 2.1875rem;
+      }
 
-    > div:nth-child(2) {
-      flex: 1;
+      > div:nth-child(2) {
+        flex: 1;
+      }
     }
   }
 </style>

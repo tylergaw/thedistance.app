@@ -53,10 +53,13 @@ projects:
               - thedistance.app
             buildCommand: pnpm install && pnpm build
             staticPublishPath: _site
+            envVars:
+              - key: API_BASE
+                value: https://api.thedistance.app
             routes:
+              - type: rewrite
+                source: /profile/*/activity/*
+                destination: /profile/activity/index.html
               - type: rewrite
                 source: /profile/*
                 destination: /profile/index.html
-              - type: rewrite
-                source: /upload
-                destination: /upload/index.html

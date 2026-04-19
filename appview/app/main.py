@@ -513,7 +513,7 @@ def oauth_callback(request: Request):
     request.session["user_did"] = did
     request.session["user_handle"] = handle
 
-    return RedirectResponse(url=settings.frontend_url, status_code=302)
+    return RedirectResponse(url=f"{settings.frontend_url}/profile/{handle}", status_code=302)
 
 
 @app.post("/oauth/refresh")
