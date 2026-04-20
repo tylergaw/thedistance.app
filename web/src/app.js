@@ -84,7 +84,9 @@ async function getActivities(did) {
  * @returns {Promise<{data: Object|null, error: string|null}>}
  */
 async function getActivity(did, rkey) {
-  const url = `${API_BASE}/api/activities/${encodeURIComponent(did)}/${encodeURIComponent(rkey)}`;
+  const url = `${API_BASE}/api/activities/${encodeURIComponent(
+    did
+  )}/${encodeURIComponent(rkey)}`;
 
   try {
     const res = await fetch(url, FETCH_OPTS);
@@ -117,11 +119,28 @@ function getActivityTypeDisplayName(type) {
     case "cycling":
       displayName = "ride";
       break;
+    case "walking":
+      displayName = "walk";
+      break;
+    case "hiking":
+      displayName = "hike";
+      break;
     default:
       displayName = type;
   }
 
   return toTitleCase(displayName);
+}
+
+/**
+ * @param {string} iso
+ * @returns {string}
+ */
+function getTimeOfDay(iso) {
+  const hour = new Date(iso).getHours();
+  if (hour < 12) return "Morning";
+  if (hour < 17) return "Afternoon";
+  return "Evening";
 }
 
 function metersToMiles(m) {

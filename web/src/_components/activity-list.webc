@@ -1,3 +1,8 @@
+<div class="preview">
+  <div></div>
+  <div></div>
+</div>
+
 <script webc:bucket="components">
   class ActivityList extends HTMLElement {
     connectedCallback() {
@@ -30,12 +35,13 @@
         this.setAttribute("loading", "");
       } else {
         this.removeAttribute("loading");
-        this.querySelector(".loading-indicator").remove();
+        this.querySelector(".loading-indicator")?.remove();
       }
     }
 
     set activities(data) {
       this.loading = false;
+      this.querySelector(".preview").remove();
 
       if (data.length === 0) {
         this.insertAdjacentHTML("beforeend", "<p>No Activities yet</p>");
@@ -71,7 +77,9 @@
               activity.rkey
             }">${
               activity.title ||
-              `Untitled ${getActivityTypeDisplayName(activity.sport_type)}`
+              `${getTimeOfDay(
+                activity.started_at
+              )} ${getActivityTypeDisplayName(activity.sport_type)}`
             }</a>
                 <div class="activity-stats">
                   ${stats
@@ -197,6 +205,32 @@ async function handleDelete(e) {
 <style webc:scoped>
   :host {
     display: block;
+  }
+
+  .preview {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    > div {
+      background: var(--color-foreground);
+      border-radius: 20px;
+      height: 280px;
+      opacity: 0.04;
+      overflow: hidden;
+      padding: 0.25rem;
+      width: 100%;
+
+      &::before {
+        background: var(--color-background);
+        border-radius: 16px 16px 0 0;
+        content: "";
+        display: block;
+        opacity: 0.75;
+        height: 60%;
+        width: 100%;
+      }
+    }
   }
 
   ul {

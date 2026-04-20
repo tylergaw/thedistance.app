@@ -1,16 +1,17 @@
 ---
 layout: layout.webc
 title: Upload - The Distance
-script: /upload.js
 ---
 
 <div class="g-max-centered">
-  <h2>Upload Activities</h2>
-  <p>Supported formats: FIT</p>
-  <form id="upload-form">
-    <input type="file" id="file-input" accept=".fit" multiple />
-    <button type="submit">Upload</button>
-  </form>
-  <div id="upload-error"></div>
-  <div id="preview"></div>
+  <div class="contents">
+    <h2>Add Activities</h2>
+    <activity-upload-form></activity-upload-form>
+  </div>
 </div>
+
+<style webc:scoped>
+  .contents {
+    padding-bottom: 2rem;
+  }
+</style>

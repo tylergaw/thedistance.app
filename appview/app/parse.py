@@ -91,9 +91,28 @@ def parse_fit(data: bytes) -> dict:
 
     encoded_polyline = polyline.encode(route_points) if route_points else None
 
+    # Generate a default title from time of day and sport type
+    sport_display_names = {"cycling": "Ride", "walking": "Walk", "hiking": "Hike"}
+    sport_display = sport_display_names.get(
+        str(sport_type), str(sport_type).replace("_", " ").title()
+    )
+
+    if isinstance(start_time, datetime):
+        hour = start_time.hour
+    else:
+        hour = 12
+
+    if hour < 12:
+        time_of_day = "Morning"
+    elif hour < 17:
+        time_of_day = "Afternoon"
+    else:
+        time_of_day = "Evening"
+
     # Build the activity dict. Required fields are always included.
     # Optional fields are only included when present in the FIT data.
     activity = {
+        "title": f"{time_of_day} {sport_display}",
         "sport_type": str(sport_type) if sport_type else "unknown",
         "started_at": started_at,
         "elapsed_time": int(elapsed_time) if elapsed_time else 0,

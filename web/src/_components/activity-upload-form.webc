@@ -1,0 +1,313 @@
+<div webc:root>
+  <form class="hidden">
+    <label>
+      <p>Drop one or more files here or <a>Browse</a> to select.</p>
+      <p>Accepted file types: .fit, <s>.gpx</s>, <s>.tcx</s></p>
+      <input type="file" accept=".fit" multiple hidden />
+    </label>
+    <div class="error-container"></div>
+    <div class="status-container"></div>
+  </form>
+  <div class="contents">
+    <activity-list></activity-list>
+  </div>
+</div>
+
+<style webc:scoped>
+  :host {
+    display: flex;
+    gap: 1.3125rem;
+    flex-wrap: wrap;
+  }
+
+  .contents {
+    flex: 1;
+    min-width: var(--grid-max-3);
+  }
+
+  form {
+    flex: 1;
+    max-width: var(--grid-max-5);
+    min-width: var(--grid-max-2);
+  }
+
+  label {
+    border: 2px dashed
+      color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.75rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+
+    &.drag-over {
+      background-color: color-mix(
+        in srgb,
+        var(--color-accent-primary) 8%,
+        transparent
+      );
+      border-color: var(--color-accent-primary);
+    }
+
+    p {
+      letter-spacing: -1%;
+      line-height: 1;
+    }
+
+    p:nth-of-type(1) {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    a {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+
+  .btn {
+    align-items: center;
+    appearance: none;
+    background-color: var(--color-accent-primary);
+    border: 0;
+    border-radius: 16px;
+    color: hsl(var(--color-foreground-hsl-light));
+    cursor: pointer;
+    display: grid;
+    justify-content: center;
+    line-height: 1;
+    padding: 0.65rem 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    text-box-trim: trim-end;
+    text-transform: uppercase;
+    width: 100%;
+
+    > * {
+      grid-area: 1 / 1;
+    }
+
+    dinkus {
+      --height: 0.7rem;
+      --bg-color: currentColor;
+      margin-top: 0.25rem;
+      pointer-events: none;
+      min-width: 80px;
+
+      & > div:not(:nth-child(3)) {
+        flex: 1;
+      }
+
+      & > div:nth-child(2) {
+        max-width: 1.2rem;
+      }
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+  }
+
+  activity-list + .btn {
+    margin-top: 1rem;
+  }
+
+  .btn + activity-list {
+    margin-top: 1rem;
+  }
+</style>
+
+<script webc:bucket="components">
+  class ActivityUploadForm extends HTMLElement {
+    connectedCallback() {
+      this.user = null;
+      this.parsedActivities = [];
+
+      document.addEventListener("afterAuthCheck", (e) => {
+        const { user } = e.detail;
+
+        if (!user) {
+          this.showError("You must be signed in to save activities.");
+          return;
+        }
+
+        this.user = user;
+        this.form.classList.remove("hidden");
+        this.initDropZone();
+      });
+    }
+
+    initDropZone() {
+      const dropZone = this.querySelector("label");
+      const fileInput = this.querySelector("input[type=file]");
+
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("drag-over");
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("drag-over");
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("drag-over");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          this.handleUpload(files);
+        }
+      });
+
+      fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+          this.handleUpload(fileInput.files);
+        }
+      });
+    }
+
+    get form() {
+      return this.querySelector("form");
+    }
+
+    get errorContainer() {
+      return this.querySelector(".error-container");
+    }
+
+    get statusContainer() {
+      return this.querySelector(".status-container");
+    }
+
+    get activityList() {
+      return this.querySelector("activity-list");
+    }
+
+    showError(message) {
+      this.errorContainer.innerHTML = `<p class="error">${message}</p>`;
+    }
+
+    clearError() {
+      this.errorContainer.innerHTML = "";
+    }
+
+    showStatus(message) {
+      this.statusContainer.innerHTML = `<p class="loading">${message}</p>`;
+    }
+
+    clearStatus() {
+      this.statusContainer.innerHTML = "";
+    }
+
+    async handleUpload(files) {
+      this.clearError();
+      this.showStatus("Parsing…");
+
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append("files", file);
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/parse`, {
+          ...FETCH_OPTS,
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          this.showError(err.error || "Upload failed");
+          this.clearStatus();
+          return;
+        }
+
+        const data = await res.json();
+        const activities = data.activities;
+
+        if (activities.length === 0) {
+          this.clearStatus();
+          this.showStatus("No activities found in uploaded files.");
+          return;
+        }
+
+        this.parsedActivities = activities;
+        this.clearStatus();
+        this.showPreview(activities);
+      } catch (err) {
+        this.showError(err.message);
+        this.clearStatus();
+      }
+    }
+
+    showPreview(activities) {
+      const list = this.activityList;
+      list.handle = this.user.handle;
+      list.activities = activities;
+
+      const btn = `
+        <button type="button" class="btn save-btn">
+          <div class="temp-dinkus hidden">•••</div>
+          <span>Save ${activities.length > 1 ? "Activities" : "Activity"}</span>
+        </button>
+      `;
+
+      list.insertAdjacentHTML("beforebegin", btn);
+      list.insertAdjacentHTML("afterend", btn);
+
+      this.querySelectorAll(".save-btn").forEach((el) => {
+        el.addEventListener("click", () => this.handleCreate());
+      });
+    }
+
+    setSaveButtonsLoading(loading) {
+      this.querySelectorAll(".save-btn").forEach((btn) => {
+        btn.disabled = loading;
+        btn.querySelector("span").classList.toggle("hidden", loading);
+        // FIXME: Make dinkus a native component so we don't have to do this.
+        btn.querySelector(".temp-dinkus").classList.toggle("hidden", !loading);
+      });
+    }
+
+    async handleCreate() {
+      this.setSaveButtonsLoading(true);
+      this.clearError();
+
+      const errors = [];
+
+      for (const activity of this.parsedActivities) {
+        try {
+          const res = await fetch(`${API_BASE}/api/activities`, {
+            ...FETCH_OPTS,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(activity),
+          });
+
+          if (!res.ok) {
+            try {
+              const err = await res.json();
+              errors.push(err.error || "Save failed");
+            } catch {
+              errors.push(`Save failed (HTTP ${res.status})`);
+            }
+          }
+        } catch (err) {
+          errors.push(err.message);
+        }
+      }
+
+      if (errors.length > 0) {
+        this.errorContainer.innerHTML = errors
+          .map((e) => `<p class="error">${e}</p>`)
+          .join("");
+        this.setSaveButtonsLoading(false);
+        return;
+      }
+
+      window.location.href = `/profile/${this.user.handle}`;
+    }
+  }
+
+  customElements.define("activity-upload-form", ActivityUploadForm);
+</script>

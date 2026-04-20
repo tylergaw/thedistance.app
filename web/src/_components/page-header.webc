@@ -35,8 +35,14 @@
   }
 
   function getAuthedUI(handle) {
-    return `<span class="divider">|</span> <a href="/upload">Upload</a> <a href="/profile/${handle}"><b class="at">@</b>${handle}</a>
-    <button id="logout-btn" type="button">Log out</button>`;
+    return `
+      <span class="divider">|</span> 
+      <a href="/profile/${handle}"><b class="at">@</b>${handle}</a>
+      <button id="logout-btn" type="button">Log out</button> 
+      <a href="/upload" class="btn">
+        New
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0M9 12h6M12 9v6"/></svg>
+      </a>`;
   }
 
   document.addEventListener("afterAuthCheck", (e) => {
@@ -136,5 +142,16 @@
     background: var(--color-accent-primary);
     color: hsl(var(--color-foreground-hsl-light));
     font-weight: 500;
+
+    &:has(svg) {
+      align-items: center;
+      column-gap: 0.125rem;
+      display: flex;
+      padding: 0.1rem 0.2rem 0.1rem 0.6rem;
+    }
+
+    svg {
+      width: 1.125rem;
+    }
   }
 </style>

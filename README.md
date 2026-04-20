@@ -1,6 +1,9 @@
 # [The Distance](https://thedistance.app)
 
-⚠️ Extremely WIP
+> [!WARNING]
+>
+> 1. This is very work-in-progress. Functionality is limited and things will be broken
+> 2. **ACTIVITY DATA IS PUBLIC**. This saves activities with location data to a PDS which is accessible to the world. There are ongoing conversations about being able to have private data on The Atmosphere, but it does not exist yet.
 
 Decentralized physical activity tracker on the [AT Protocol](https://atproto.com).
 
@@ -97,19 +100,3 @@ pnpm i && pnpm start
 ```
 
 Access at `http://127.0.0.1:8001`. **Note**: You cannot use `localhost`.
-
-## Scripts
-
-⚠️ Very crusty, probably doesn't work anymore
-
-Convert Strava export data to activity records:
-
-```
-python scripts/strava-to-records.py rides.json -o records/
-```
-
-Create a record on your PDS:
-
-```
-goat record create --no-validate records/<id>.json
-```
