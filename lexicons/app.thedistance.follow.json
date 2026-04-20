@@ -1,0 +1,27 @@
+{
+  "lexicon": 1,
+  "id": "app.thedistance.follow",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Record declaring a social 'follow' relationship with another account. Duplicate follows will be ignored by the AppView.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the account being followed."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Timestamp of when the follow was created."
+          }
+        }
+      }
+    }
+  }
+}

@@ -7,10 +7,6 @@ Decentralized physical activity tracker on the [AT Protocol](https://atproto.com
 > 1. This is very work-in-progress. Functionality is limited and things will be broken
 > 2. **ACTIVITY DATA IS PUBLIC**. This saves activities with location data to a PDS which is accessible to the world. There are ongoing conversations about being able to have private data on The Atmosphere, but it does not exist yet.
 
-**Lexicons:**
-
-- [`app.thedistance.activity`](https://lexicon.garden/lexicon/did:plc:x52h4ttzfk5rxxdmzinoevgo/app.thedistance.activity)
-
 ## Technology overview
 
 This is a monorepo, it's made up of: A Jetstream subscriber, a REST API, and the website.
@@ -19,7 +15,7 @@ All three deployed on Render. See `render.yaml` for details.
 
 - `appview`: Jetstream subscriber and API server, deployed as a background worker and web service, respectively
 - `web`: Frontend built with 11ty (with WebC)
-- `lexicons`: AT Protocol lexicon schemas
+- `lexicons`: AT Protocol lexicon schemas. [On Lexicon Garden](https://lexicon.garden/identity/did:plc:x52h4ttzfk5rxxdmzinoevgo)
 
 ## Local development
 
