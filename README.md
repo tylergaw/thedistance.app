@@ -1,23 +1,27 @@
 # [The Distance](https://thedistance.app)
 
+Decentralized physical activity tracker on the [AT Protocol](https://atproto.com).
+
 > [!WARNING]
 >
 > 1. This is very work-in-progress. Functionality is limited and things will be broken
 > 2. **ACTIVITY DATA IS PUBLIC**. This saves activities with location data to a PDS which is accessible to the world. There are ongoing conversations about being able to have private data on The Atmosphere, but it does not exist yet.
 
-Decentralized physical activity tracker on the [AT Protocol](https://atproto.com).
-
 **Lexicons:**
 
-- [`app.thedistance.activity`](https://lexicon.garden/lexicon/did:plc:gbye6kw5wlaaa2kaocnqswm3/app.thedistance.activity)
+- [`app.thedistance.activity`](https://lexicon.garden/lexicon/did:plc:x52h4ttzfk5rxxdmzinoevgo/app.thedistance.activity)
 
-## Local Development
+## Technology overview
 
-This is a monorepo, it's made up of: A Jetstream subscriber, a REST API, and the website. All three deployed with Render. See `render.yaml` for details.
+This is a monorepo, it's made up of: A Jetstream subscriber, a REST API, and the website.
 
-- `appview` — Backend: Jetstream subscriber + API server
-- `web` — Frontend built with 11ty
-- `lexicons` — AT Protocol lexicon schemas
+All three deployed on Render. See `render.yaml` for details.
+
+- `appview`: Jetstream subscriber and API server, deployed as a background worker and web service, respectively
+- `web`: Frontend built with 11ty (with WebC)
+- `lexicons`: AT Protocol lexicon schemas
+
+## Local development
 
 ### System requirements
 
@@ -25,7 +29,7 @@ This is a monorepo, it's made up of: A Jetstream subscriber, a REST API, and the
 - [uv](https://docs.astral.sh/uv/) — Python package manager
 - [PostgreSQL](https://www.postgresql.org/) — running locally, no Docker
 
-You will need a local Postgres database created and running. Set the connection string in your `.env` file (see AppView setup below).
+You will need a local Postgres database, named `thedistance`, created and running. Set the connection string in your `.env` file (see AppView setup below).
 
 ## AppView
 
