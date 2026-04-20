@@ -30,7 +30,7 @@ title: The Distance
     gap: 1.3125rem;
     flex-wrap: wrap;
     padding-top: 2rem;
-    padding-bottom: 20rem;
+    padding-bottom: 2rem;
   }
 
   .intro-contents-container {

@@ -12,7 +12,6 @@
   </h1>
 
   <nav id="page-header-nav">
-    <a href="/about">About</a>
     <a :href="loginHref" class="btn hidden" id="page-header-auth-btn"
       >Log in / Join</a
     >

@@ -14,8 +14,11 @@
     <style @raw="getBundle('css')" webc:keep></style>
   </head>
   <body>
-    <page-header :login-href="page.url === '/' ? '#login' : '/login'"></page-header>
+    <page-header
+      :login-href="page.url === '/' ? '#login' : '/login'"
+    ></page-header>
     <main @raw="content"></main>
+    <page-footer></page-footer>
 
     <script src="/vendor/maplibre-gl.js" webc:keep></script>
     <script src="/app.js" webc:keep></script>
