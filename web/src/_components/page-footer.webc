@@ -28,7 +28,6 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-info-circle"
           viewBox="0 0 24 24"
         >
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -47,7 +46,6 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bluesky"
           viewBox="0 0 24 24"
         >
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -67,7 +65,6 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-mail"
           viewBox="0 0 24 24"
         >
           <path stroke="none" d="M0 0h24v24H0z" />
