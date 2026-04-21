@@ -27,8 +27,6 @@ title: Log in - The Distance
     gap: 1.3125rem;
     flex-direction: column;
     flex-wrap: wrap;
-    /* padding-top: 5rem; */
-    /* padding-bottom: 5rem; */
   }
 
   .auth-contents-container {
@@ -38,7 +36,6 @@ title: Log in - The Distance
   .auth-contents {
     margin: 0 auto;
     max-width: var(--grid-max-5);
-    /* padding: 3rem 0; */
     width: 100%;
 
     p {
