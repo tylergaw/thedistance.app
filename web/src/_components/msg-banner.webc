@@ -3,7 +3,9 @@
     <slot name="summary"></slot>
   </summary>
   <div class="message">
-    <slot name="message"></slot>
+    <div class="message-inner">
+      <slot name="message"></slot>
+    </div>
   </div>
 </details>
 
@@ -23,7 +25,6 @@
     align-items: center;
     background: var(--color-bg);
     border-radius: 20px;
-    font-weight: 600;
     gap: 0.5rem;
     cursor: pointer;
     display: flex;
@@ -33,6 +34,11 @@
     list-style: none;
     padding: 1.25rem;
     width: 100%;
+
+    b,
+    strong {
+      font-weight: 700;
+    }
 
     span:has(svg) {
       align-items: center;
@@ -66,7 +72,23 @@
     background: var(--color-bg);
     border-radius: 0 0 20px 20px;
     letter-spacing: -1%;
-    padding: 1.25rem;
+    padding: 0.75rem;
     padding-top: 0;
+
+    ol,
+    ul {
+      padding-left: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p + :where(ol, ul) {
+      margin-top: 0.75rem;
+    }
+  }
+
+  .message-inner {
+    background: light-dark(rgba(255, 255, 255, 40%), rgba(0 0 0 / 30%));
+    border-radius: 16px;
+    padding: 1.5rem;
   }
 </style>

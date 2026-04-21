@@ -168,6 +168,18 @@ h6 {
   padding-right: var(--padding-h);
 }
 
+.g-max-5 {
+  max-width: var(--grid-max-5);
+}
+
+.g-max-6 {
+  max-width: var(--grid-max-6);
+}
+
+.g-max-7 {
+  max-width: var(--grid-max-7);
+}
+
 @media (min-width: 600px) {
   .g-max-centered {
     --padding-h: 2.5rem;
@@ -183,4 +195,9 @@ body {
 
 a {
   color: var(--color-accent-foreground);
+}
+
+b,
+strong {
+  font-weight: 600;
 }
