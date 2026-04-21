@@ -19,9 +19,12 @@
 </header>
 
 <script webc:bucket="components">
-  async function logout() {
+  async function logout(e) {
+    e.preventDefault();
     localStorage.removeItem("auth:user");
-    window.location.href = "/";
+
+    const nav = document.getElementById("page-header-nav");
+    nav.innerHTML = `<a :href="/" class="btn" id="page-header-auth-btn">Log in / Join</a>`;
 
     try {
       await fetch(`${API_BASE}/oauth/logout`, {
@@ -31,6 +34,8 @@
     } catch {
       // Continue with local cleanup even if server call fails
     }
+
+    window.location.href = "/";
   }
 
   function getAuthedUI(handle) {
