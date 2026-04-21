@@ -85,7 +85,7 @@
     border-radius: 1rem;
     display: grid;
     color: var(--color-foreground);
-    font-size: 0.875rem;
+    font-size: var(--font-size-0_75);
     padding: 0.35rem;
     text-decoration: none;
 

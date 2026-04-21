@@ -28,7 +28,11 @@
       </div>
       <div class="tagline">
         <dinkus></dinkus>
-        <p>Your activity. In the Atmosphere.</p>
+        <p>
+          Your goals. <br />
+          Your progress. <br />
+          In the Atmosphere.
+        </p>
       </div>
     </div>
   </div>
@@ -40,11 +44,13 @@
   }
 
   .inner {
+    --padding: 1rem;
+    --padding-t: 4rem;
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-    padding: 3.5rem;
-    padding-top: 10rem;
+    padding: var(--padding);
+    padding-top: var(--padding-t);
   }
 
   .contents {
@@ -63,18 +69,20 @@
   }
 
   .hero-image {
+    --object-pos: 65%;
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: var(--object-pos);
   }
 
   .hero-dinkus {
     --height: 3.2rem;
     --gap: 8px;
     align-self: flex-end;
+    display: none;
     margin-bottom: 5.25rem;
     max-width: 37.5rem;
     mix-blend-mode: overlay;
@@ -98,25 +106,27 @@
   }
 
   .logo-the {
+    --scale: 0.6;
+    scale: var(--scale);
+    transform-origin: left bottom;
     transform: translateX(-4px);
   }
 
   .logo-distance {
-    height: 480px;
+    --h: 280px;
+    height: var(--h);
     width: 100%;
   }
 
   .tagline {
-    align-items: center;
-    column-gap: 0.5rem;
-    display: flex;
-    margin-top: 0.5rem;
+    padding: 1rem 0;
     position: relative;
 
     dinkus {
       --bg-color: transparent;
       --border: dotted;
       --height: 1.2rem;
+      display: none;
       flex: 1;
 
       > div:not(:nth-child(3)) {
@@ -130,10 +140,67 @@
 
     p {
       color: hsl(var(--color-background-hsl-light));
-      font-size: 1.75rem;
+      font-size: var(--font-size-3);
       line-height: 1;
       letter-spacing: -1%;
       text-align: right;
+    }
+  }
+
+  @media (min-width: 600px) {
+    .inner {
+      --padding: 2rem;
+      --padding-t: 6rem;
+    }
+
+    .logo-the {
+      --scale: 0.75;
+    }
+
+    .logo-distance {
+      --h: 340px;
+    }
+  }
+
+  @media (min-width: 880px) {
+    .inner {
+      --padding: 3.5rem;
+      --padding-t: 10rem;
+    }
+
+    .hero-image {
+      --object-pos: center;
+    }
+
+    .hero-dinkus {
+      display: flex;
+    }
+
+    .logo-the {
+      --scale: 1;
+    }
+
+    .logo-distance {
+      --h: 480px;
+    }
+
+    .tagline {
+      align-items: center;
+      column-gap: 0.5rem;
+      display: flex;
+      padding-top: 0.5rem;
+
+      dinkus {
+        display: flex;
+      }
+
+      p {
+        font-size: var(--font-size-2_5);
+
+        br {
+          display: none;
+        }
+      }
     }
   }
 </style>

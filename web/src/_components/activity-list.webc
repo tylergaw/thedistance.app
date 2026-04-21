@@ -252,13 +252,13 @@ async function handleDelete(e) {
 
     time {
       display: block;
-      font-size: 0.875rem;
+      font-size: var(--font-size-0_75);
       line-height: 1;
     }
 
     a {
       font-weight: 600;
-      font-size: 1.5rem;
+      font-size: var(--font-size-2);
     }
   }
 
@@ -276,12 +276,12 @@ async function handleDelete(e) {
     }
 
     .stat-label {
-      font-size: 0.875rem;
+      font-size: var(--font-size-0_75);
       line-height: 1;
     }
 
     .stat-value {
-      font-size: 1.125rem;
+      font-size: var(--font-size-1_5);
       font-weight: 600;
       line-height: 1.1;
     }
