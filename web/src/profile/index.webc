@@ -5,60 +5,113 @@ title: Profile - The Distance
 
 <div class="g-max-centered">
   <div class="contents">
-    <h2 id="profile-handle">&nbsp;</h2>
+    <header class="profile-header">
+      <div class="profile-avatar"></div>
+      <div class="profile-contents">
+        <p class="profile-dname">&nbsp;</p>
+        <p class="profile-handle">&nbsp;</p>
+        <div class="profile-desc">&nbsp;</div>
+      </div>
+    </header>
     <activity-list id="profile-activities" loading></activity-list>
   </div>
 </div>
 
 <style webc:scoped>
   .contents {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     margin: 0 auto;
     max-width: var(--grid-max-5);
     padding-bottom: 2rem;
+    padding-top: 2rem;
+  }
+
+  .profile-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    letter-spacing: -1%;
+    line-height: 1.25;
+  }
+
+  .profile-contents {
+    flex: 1;
+  }
+
+  .profile-dname {
+    font-size: var(--font-size-2);
+    font-weight: 700;
+  }
+
+  .profile-desc {
+    padding-top: 1.25rem;
+  }
+
+  .profile-avatar {
+    --size: 100px;
+    background: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    border-radius: 20px;
+    box-shadow: 0 0 1px
+      color-mix(in srgb, var(--color-foreground) 20%, transparent);
+    height: var(--size);
+    overflow: hidden;
+    width: var(--size);
+
+    img {
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      width: 100%;
+    }
   }
 </style>
 
 <script webc:bucket="components">
   const [_, rawHandle] = window.location.pathname.split("/profile/");
   const requestedHandle = rawHandle.replaceAll("/", "");
-  const title = document.getElementById("profile-handle");
+  const handle = document.querySelector(".profile-handle");
+  handle.textContent = `@${requestedHandle}`;
+  document.title = `@${requestedHandle} is Going The Distance`;
 
   async function renderProfile({ user }) {
-    title.textContent = `@${user.handle}`;
-    document.title = `@${user.handle} is Going The Distance`;
-
     const { data } = await getActivities(user.did);
+    const dname = document.querySelector(".profile-dname");
+    dname.textContent = user.displayName;
+
+    const desc = document.querySelector(".profile-desc");
+    if (user.description) {
+      desc.innerHTML = user.description
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\n/g, "<br>");
+    }
+
+    if (user.avatarUrl) {
+      const img = new Image();
+      img.onload = () => {
+        img.alt = `${user.displayName || user.handle}`;
+        document.querySelector(".profile-avatar").appendChild(img);
+      };
+      img.src = user.avatarUrl;
+    }
+
     const list = document.getElementById("profile-activities");
     list.handle = user.handle;
     list.activities = data;
-
-    // FIXME: Do something with this or remove
-    // if (user) {
-    //   const isOwner = user.did === did;
-    //   list.editable = isOwner;
-    // }
   }
 
-  document.addEventListener("afterAuthCheck", (e) => {
-    const { user } = e.detail;
-
-    if (user) {
-      const requestedIsCurrent = user.handle === requestedHandle;
-
-      if (requestedIsCurrent) {
-        renderProfile({ user });
-        return;
-      }
+  getUserByHandle(requestedHandle).then((foundUser) => {
+    if (!foundUser) {
+      document.getElementById("profile-activities").remove();
+      title.textContent = `Couldn’t find @${requestedHandle}`;
+      document.title = "The Distance";
+      return;
     }
 
-    lookupHandle(requestedHandle).then((foundUser) => {
-      if (!foundUser) {
-        title.textContent = `Couldn’t find an @${requestedHandle}`;
-        document.title = "The Distance";
-        return;
-      }
-
-      renderProfile({ user: foundUser });
-    });
+    renderProfile({ user: foundUser });
   });
 </script>

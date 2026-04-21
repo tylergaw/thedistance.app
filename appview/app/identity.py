@@ -148,3 +148,47 @@ def resolve_identity(client: httpx.Client, identifier: str) -> tuple[str, str, s
         return did, handle, pds_url
 
     raise ValueError(f"Identifier is not a valid handle or DID: {identifier}")
+
+
+def fetch_profile(client: httpx.Client, did: str, pds_url: str) -> dict | None:
+    """Fetch a user's profile from their PDS.
+
+    Makes an unauthenticated getRecord call for app.bsky.actor.profile.
+    Returns a dict with display_name, description, and avatar_url, or None
+    if the profile record doesn't exist.
+    """
+    try:
+        resp = client.get(
+            f"{pds_url}/xrpc/com.atproto.repo.getRecord",
+            params={
+                "repo": did,
+                "collection": "app.bsky.actor.profile",
+                "rkey": "self",
+            },
+            timeout=SAFE_HTTP_TIMEOUT,
+        )
+        if resp.status_code != 200:
+            log.debug("No profile record for %s: HTTP %s", did, resp.status_code)
+            return None
+    except httpx.HTTPError as e:
+        log.debug("Failed to fetch profile for %s: %s", did, e)
+        return None
+
+    value = resp.json().get("value", {})
+
+    avatar_url = None
+    avatar = value.get("avatar")
+    if avatar and isinstance(avatar, dict):
+        ref = avatar.get("ref", {})
+        cid = ref.get("$link")
+        if cid:
+            avatar_url = (
+                f"{pds_url}/xrpc/com.atproto.sync.getBlob"
+                f"?did={did}&cid={cid}"
+            )
+
+    return {
+        "display_name": value.get("displayName"),
+        "description": value.get("description"),
+        "avatar_url": avatar_url,
+    }

@@ -5,14 +5,7 @@
 
 <script webc:bucket="components">
   class ActivityList extends HTMLElement {
-    connectedCallback() {
-      if (this.loading) {
-        this.insertAdjacentHTML(
-          "beforeend",
-          `<p class="loading-indicator">Looking for <s>love</s>activities in all the wrong places…</p>`
-        );
-      }
-    }
+    connectedCallback() {}
 
     get editable() {
       return this.hasAttribute("editable");
@@ -35,7 +28,6 @@
         this.setAttribute("loading", "");
       } else {
         this.removeAttribute("loading");
-        this.querySelector(".loading-indicator")?.remove();
       }
     }
 
@@ -44,11 +36,13 @@
       this.querySelector(".preview").remove();
 
       if (data.length === 0) {
-        this.insertAdjacentHTML("beforeend", "<p>No Activities yet</p>");
+        this.insertAdjacentHTML(
+          "beforeend",
+          "<p class='zero'>No Activities yet</p>"
+        );
         return;
       }
 
-      // https://bsky.app/profile/jamellebouie.net/post/3mjkzfkmvvs2g
       const activitiesHTML = `
       <ul>
         ${data
@@ -231,6 +225,12 @@ async function handleDelete(e) {
         width: 100%;
       }
     }
+  }
+
+  .zero {
+    font-weight: 500;
+    padding: 3rem 0.5rem;
+    text-align: center;
   }
 
   ul {

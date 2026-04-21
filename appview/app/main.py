@@ -29,9 +29,17 @@ from app.db import (
     get_activity as _get,
 )
 from app.db import (
+    get_profile,
     list_activities as _list,
+    upsert_profile,
 )
-from app.identity import is_valid_did, is_valid_handle, resolve_handle, resolve_identity
+from app.identity import (
+    fetch_profile,
+    is_valid_did,
+    is_valid_handle,
+    resolve_handle,
+    resolve_identity,
+)
 from app.parse import parse_file
 from app.tid import generate_tid
 from app.oauth import (
@@ -183,7 +191,16 @@ def resolve_handle_endpoint(handle: str):
             did, resolved_handle, pds_url = resolve_identity(client, handle)
         except ValueError as e:
             return JSONResponse(status_code=400, content={"error": str(e)})
-    return {"did": did, "handle": resolved_handle}
+
+        profile = fetch_profile(client, did, pds_url)
+
+    result = {"did": did, "handle": resolved_handle}
+    if profile:
+        result["displayName"] = profile["display_name"]
+        result["description"] = profile["description"]
+        result["avatarUrl"] = profile["avatar_url"]
+
+    return result
 
 
 # --- File parsing endpoints ---
@@ -502,11 +519,23 @@ def oauth_callback(request: Request):
                         status_code=400, content={"error": "Authorization server mismatch"}
                     )
 
+            profile = fetch_profile(client, did, pds_url)
+
         save_oauth_session(
             conn, did, handle, pds_url, authserver_iss,
             tokens["access_token"], tokens["refresh_token"],
             dpop_authserver_nonce, auth_req["dpop_private_jwk"],
         )
+
+        if profile:
+            upsert_profile(
+                conn, did, handle,
+                profile["display_name"],
+                profile["description"],
+                profile["avatar_url"],
+            )
+        else:
+            upsert_profile(conn, did, handle, None, None, None)
     finally:
         conn.close()
 
@@ -568,4 +597,19 @@ def oauth_logout(request: Request, session: dict = Depends(require_auth)):
 
 @app.get("/oauth/me")
 def oauth_me(session: dict = Depends(require_auth)):
-    return {"did": session["did"], "handle": session["handle"]}
+    did = session["did"]
+    handle = session["handle"]
+
+    conn = get_connection()
+    try:
+        profile = get_profile(conn, did)
+    finally:
+        conn.close()
+
+    result = {"did": did, "handle": handle}
+    if profile:
+        result["displayName"] = profile["display_name"]
+        result["description"] = profile["description"]
+        result["avatarUrl"] = profile["avatar_url"]
+
+    return result

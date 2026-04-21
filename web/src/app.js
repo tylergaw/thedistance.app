@@ -16,13 +16,34 @@ getAuthedUser().then((user) => {
  * @returns {Promise<{did: string, handle: string}|null>} The authenticated user, or null if not authenticated.
  */
 async function getAuthedUser() {
+  /*
+    Look for a cached user object in localstorage, if found, use it instead of
+    making a trip to the server. If any other auth-required request fails with
+    a 401, we clear the cache/logout.
+  */
+  const cachedUser = localStorage.getItem("auth:user");
+  try {
+    if (cachedUser) {
+      const user = JSON.parse(cachedUser);
+      // Wait until the next loop to make sure components are in the DOM.
+      await sleep(0);
+      return user;
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+
   try {
     const res = await fetch(`${API_BASE}/oauth/me`, FETCH_OPTS);
     if (res.ok) {
       const user = await res.json();
+      // Cache the user object so we don't need to fetch it on every page.
+      localStorage.setItem("auth:user", JSON.stringify(user));
       return user;
     }
   } catch (e) {
+    // FIXME: Handle fetch failure
+    console.log(e.message);
     return null;
   }
 
@@ -33,7 +54,7 @@ async function getAuthedUser() {
  * @param {string} handle
  * @returns {Promise<{did: string, handle: string}|null>} The resolved user, or null if not found.
  */
-async function lookupHandle(handle) {
+async function getUserByHandle(handle) {
   try {
     const res = await fetch(
       `${API_BASE}/api/resolve/${encodeURIComponent(handle)}`,
@@ -221,4 +242,8 @@ function formatDate(iso) {
     month: "short",
     day: "numeric",
   });
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

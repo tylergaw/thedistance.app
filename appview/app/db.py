@@ -79,6 +79,18 @@ def init_db():
         )
         conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS profiles (
+                did TEXT PRIMARY KEY,
+                handle TEXT NOT NULL,
+                display_name TEXT,
+                description TEXT,
+                avatar_url TEXT,
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+        """
+        )
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS oauth_sessions (
                 did TEXT PRIMARY KEY,
                 handle TEXT NOT NULL,
@@ -327,6 +339,36 @@ def update_oauth_session_pds_nonce(conn, did, dpop_pds_nonce):
 def delete_oauth_session(conn, did):
     conn.execute("DELETE FROM oauth_sessions WHERE did = %s", (did,))
     conn.commit()
+
+
+def upsert_profile(conn, did, handle, display_name, description, avatar_url):
+    conn.execute(
+        """
+        INSERT INTO profiles (did, handle, display_name, description, avatar_url, updated_at)
+        VALUES (%s, %s, %s, %s, %s, NOW())
+        ON CONFLICT (did) DO UPDATE SET
+            handle = EXCLUDED.handle,
+            display_name = EXCLUDED.display_name,
+            description = EXCLUDED.description,
+            avatar_url = EXCLUDED.avatar_url,
+            updated_at = NOW()
+    """,
+        (did, handle, display_name, description, avatar_url),
+    )
+    conn.commit()
+
+
+def get_profile(conn, did):
+    return conn.execute(
+        "SELECT * FROM profiles WHERE did = %s", (did,)
+    ).fetchone()
+
+
+def has_profile(conn, did):
+    row = conn.execute(
+        "SELECT 1 FROM profiles WHERE did = %s", (did,)
+    ).fetchone()
+    return row is not None
 
 
 def get_activity(conn, did, rkey):
