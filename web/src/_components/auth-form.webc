@@ -26,7 +26,7 @@
         />
       </div>
       <button type="submit" class="btn">
-        <dinkus class="hidden"></dinkus>
+        <dink-us class="hidden"></dink-us>
         <span>Continue</span>
       </button>
     </form>
@@ -136,7 +136,7 @@
     grid-area: 1 / 1;
   }
 
-  .btn dinkus {
+  .btn dink-us {
     --height: 0.7rem;
     margin-top: 0.25rem;
     pointer-events: none;
@@ -172,7 +172,7 @@
     const btnText = btn.querySelector("span");
     btnText.classList.add("hidden");
 
-    const indicator = btn.querySelector("dinkus");
+    const indicator = btn.querySelector("dink-us");
     indicator.classList.remove("hidden");
 
     try {

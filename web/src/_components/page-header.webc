@@ -7,7 +7,7 @@
         width="113"
         height="32"
       />
-      <dinkus></dinkus>
+      <dink-us></dink-us>
     </a>
   </h1>
 
@@ -88,7 +88,7 @@
       row-gap: 0.25rem;
     }
 
-    dinkus {
+    dink-us {
       --height: 0.5rem;
 
       > div:not(:nth-child(3)) {
