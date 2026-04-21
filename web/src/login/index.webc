@@ -4,64 +4,16 @@ title: Log in - The Distance
 ---
 
 <div class="auth-page g-max-centered">
-  <div class="auth-contents-container">
-    <div class="auth-contents">
-      <p>
-        Track and share physical activities. Cycling, running, walking, hiking.
-        Anything that gets you up and moving.
-      </p>
-      <p>
-        Another sentence or two here to introduce the AT Protocol would be
-        helpful. Doesn’t have to be deep, just enough to provide
-        <a href="">a link</a> to a page that goes into more detail would be
-        great.
-      </p>
-    </div>
-  </div>
   <auth-form></auth-form>
 </div>
 
 <style>
   .auth-page {
-    display: flex;
-    gap: 1.3125rem;
-    flex-direction: column;
-    flex-wrap: wrap;
+    padding-top: 2rem;
   }
 
-  .auth-contents-container {
-    flex: 1;
-  }
-
-  .auth-contents {
+  auth-form {
     margin: 0 auto;
-    max-width: var(--grid-max-5);
-    width: 100%;
-
-    p {
-      letter-spacing: -1%;
-      line-height: 1.4;
-      margin-top: 1.25rem;
-      font-size: var(--font-size-1_5);
-    }
-
-    p:nth-of-type(1) {
-      font-size: var(--font-size-3_5);
-      line-height: 1.25;
-    }
-  }
-
-  @media (min-width: 680px) {
-    .auth-page {
-      flex-direction: row;
-    }
-
-    .auth-contents {
-      padding: 3rem 0;
-    }
-
-    auth-form {
-      max-width: var(--grid-max-4);
-    }
+    max-width: var(--grid-max-4);
   }
 </style>

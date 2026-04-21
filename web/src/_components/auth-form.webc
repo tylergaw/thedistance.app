@@ -82,9 +82,13 @@
           name="handle"
           autocapitalize="off"
           autocorrect="off"
-          placeholder="yourhandle.bsky.social"
+          placeholder="yourname.bsky.social"
           required
         />
+        <p class="field-note">
+          e.g., yourname.bsky.social, or your own domain like thedistance.app,
+          if you’ve set one up
+        </p>
       </div>
       <button type="submit" class="btn">
         <dink-us class="hidden"></dink-us>
@@ -177,6 +181,14 @@
       padding: 0.5rem 0.75rem;
       width: 100%;
     }
+
+    .field-note {
+      letter-spacing: -1%;
+      line-height: 1.2;
+      opacity: 0.75;
+      padding: 0.15rem 0.5rem;
+      font-size: var(--font-size-0_75);
+    }
   }
 
   .btn {
@@ -221,7 +233,7 @@
   }
 
   .field + .btn {
-    margin-top: 0.5rem;
+    margin-top: 1.25rem;
   }
 
   .atmo-details-btn {
