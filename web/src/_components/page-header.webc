@@ -12,9 +12,7 @@
   </h1>
 
   <nav id="page-header-nav">
-    <a :href="loginHref" class="btn hidden" id="page-header-auth-btn"
-      >Log in / Join</a
-    >
+    <a :href="loginHref" class="btn" id="page-header-auth-btn">Log in / Join</a>
   </nav>
 
   <scheme-chooser></scheme-chooser>
@@ -22,6 +20,9 @@
 
 <script webc:bucket="components">
   async function logout() {
+    localStorage.removeItem("auth:user");
+    window.location.href = "/";
+
     try {
       await fetch(`${API_BASE}/oauth/logout`, {
         ...FETCH_OPTS,
@@ -30,12 +31,10 @@
     } catch {
       // Continue with local cleanup even if server call fails
     }
-    window.location.href = "/";
   }
 
   function getAuthedUI(handle) {
     return `
-      <span class="divider">|</span> 
       <a href="/profile/${handle}"><b class="at">@</b>${handle}</a>
       <button id="logout-btn" type="button">Log out</button> 
       <a href="/upload" class="btn">
@@ -44,21 +43,18 @@
       </a>`;
   }
 
-  document.addEventListener("afterAuthCheck", (e) => {
-    const { user } = e.detail;
-    const authBtn = document.getElementById("page-header-auth-btn");
-
-    if (!user) {
-      authBtn.classList.remove("hidden");
-      return;
-    }
-
+  function onUserAvailable(user) {
     const nav = document.getElementById("page-header-nav");
-    authBtn.remove();
-    nav.insertAdjacentHTML("beforeend", getAuthedUI(user.handle));
+    nav.innerHTML = getAuthedUI(user.handle);
 
     const logoutBtn = document.getElementById("logout-btn");
     logoutBtn.addEventListener("click", logout);
+  }
+
+  document.addEventListener("afterAuthCheck", (e) => {
+    const { user } = e.detail;
+    if (!user) return;
+    onUserAvailable(user);
   });
 </script>
 

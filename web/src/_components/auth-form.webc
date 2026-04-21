@@ -193,6 +193,7 @@
       const data = await res.json();
       window.location.href = data.redirect_url;
     } catch (err) {
+      // FIXME: Handle fetch failure correctly
       alert("Login failed: " + err.message);
     } finally {
       btn.disabled = false;

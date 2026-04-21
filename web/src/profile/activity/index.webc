@@ -24,7 +24,8 @@ title: Activity - The Distance
   );
   const activityIdentifier = activityPathMatch ? activityPathMatch[1] : null;
   const activityRkey = activityPathMatch ? activityPathMatch[2] : null;
-  const activityIdentifierIsDid = activityIdentifier && activityIdentifier.startsWith("did:");
+  const activityIdentifierIsDid =
+    activityIdentifier && activityIdentifier.startsWith("did:");
 
   async function renderActivity(did, handle) {
     const { data, error } = await getActivity(did, activityRkey);
@@ -44,14 +45,15 @@ title: Activity - The Distance
     const { user } = e.detail;
 
     if (activityIdentifierIsDid) {
-      const handle = user && user.did === activityIdentifier ? user.handle : null;
+      const handle =
+        user && user.did === activityIdentifier ? user.handle : null;
       renderActivity(activityIdentifier, handle);
     } else {
       // Identifier is a handle, resolve to DID
       if (user && user.handle === activityIdentifier) {
         renderActivity(user.did, user.handle);
       } else {
-        lookupHandle(activityIdentifier).then((foundUser) => {
+        getUserByHandle(activityIdentifier).then((foundUser) => {
           if (!foundUser) {
             const list = document.getElementById("activity-detail");
             list.loading = false;
