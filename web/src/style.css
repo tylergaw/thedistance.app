@@ -124,6 +124,15 @@ h6 {
     hsl(var(--color-accent-foreground-hsl-dark))
   );
 
+  /* Font sizes. Base: 1rem/16px. Full step: 8px. Half step: 4px. */
+  --font-size-0_75: 0.875rem; /* 14px */
+  --font-size-1: 1rem; /* 16px */
+  --font-size-1_5: 1.25rem; /* 20px */
+  --font-size-2: 1.5rem; /* 24px */
+  --font-size-2_5: 1.75rem; /* 28px */
+  --font-size-3: 2rem; /* 32px */
+  --font-size-3_5: 2.25rem; /* 36px */
+
   /* Font stacks */
   --font-body: "Hanken Grotesk", helvetica, sans-serif;
   --font-display: "Antonio", helvetica, sans-serif;
@@ -151,11 +160,30 @@ h6 {
 }
 
 .g-max-centered {
+  --padding-h: 1rem;
   margin-left: auto;
   margin-right: auto;
   max-width: var(--grid-max-11);
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
+  padding-left: var(--padding-h);
+  padding-right: var(--padding-h);
+}
+
+.g-max-5 {
+  max-width: var(--grid-max-5);
+}
+
+.g-max-6 {
+  max-width: var(--grid-max-6);
+}
+
+.g-max-7 {
+  max-width: var(--grid-max-7);
+}
+
+@media (min-width: 600px) {
+  .g-max-centered {
+    --padding-h: 2.5rem;
+  }
 }
 
 html,
@@ -167,4 +195,9 @@ body {
 
 a {
   color: var(--color-accent-foreground);
+}
+
+b,
+strong {
+  font-weight: 600;
 }

@@ -14,8 +14,84 @@
     <style @raw="getBundle('css')" webc:keep></style>
   </head>
   <body>
-    <page-header :login-href="page.url === '/' ? '#login' : '/login'"></page-header>
+    <page-header
+      :login-href="page.url === '/' ? '#login' : '/login'"
+    ></page-header>
+    <msg-banner>
+      <span slot="summary">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <path
+            d="M12 9v4M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0M12 16h.01"
+          />
+        </svg>
+        <strong
+          >This is a work-in-progress. Functionality is limited and things will
+          be broken.</strong
+        ></span
+      >
+      <div slot="message">
+        <div class="g-max-7">
+          <p>
+            If you’re seeing this, you’re early. <strong>Thank you</strong> for
+            trying things out. I’m building this in public and appreciate any
+            and all feedback. With that, there are two main things I ask you to
+            keep in mind.
+          </p>
+          <ol>
+            <li>
+              Any activities you create are public to the world via a PDS. This
+              is because all data on ATProto is public. Activities contain
+              location data, which could be sensitive.
+              <strong
+                >If you don’t want your location data made public, do not create
+                activities yet.</strong
+              >
+              Permissioned/private data is a big topic of conversation in
+              ATProto, but as far as I know, there’s no ETA for when it will be
+              a thing.
+            </li>
+            <li>
+              Consider this “alpha” software. There’s not much in the way of
+              functionality, you will find bugs, and I will most likely bring
+              the site down a few times while building.
+            </li>
+          </ol>
+          <p>
+            If you have questions, feature requests, or are interested in
+            helping out, use any of these:
+          </p>
+          <ul>
+            <li>
+              <a href="mailto:hello@thedistance.app"> hello@thedistance.app </a>
+            </li>
+            <li>
+              <a href="https://bsky.app/profile/thedistance.app">
+                @thedistance.app
+              </a>
+            </li>
+            <li>
+              <a href="https://bsky.app/profile/tylergaw.com">
+                @tylergaw.com
+              </a>
+            </li>
+          </ul>
+          <p>–Tyler</p>
+        </div>
+      </div>
+    </msg-banner>
     <main @raw="content"></main>
+    <page-footer></page-footer>
 
     <script src="/vendor/maplibre-gl.js" webc:keep></script>
     <script src="/app.js" webc:keep></script>

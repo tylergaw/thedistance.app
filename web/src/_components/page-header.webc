@@ -7,12 +7,11 @@
         width="113"
         height="32"
       />
-      <dinkus></dinkus>
+      <dink-us></dink-us>
     </a>
   </h1>
 
   <nav id="page-header-nav">
-    <a href="/about">About</a>
     <a :href="loginHref" class="btn hidden" id="page-header-auth-btn"
       >Log in / Join</a
     >
@@ -65,21 +64,31 @@
 
 <style webc:scoped="page-header">
   :host {
+    --padding-h: 1.5rem;
     align-items: center;
     column-gap: 0.5rem;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    padding: 1.2rem 3.25rem 1rem 3.25rem;
+    padding: 1.2rem var(--padding-h) 1rem var(--padding-h);
+  }
+
+  @media (min-width: 600px) {
+    :host {
+      --padding-h: 3.25rem;
+    }
   }
 
   h1 {
+    flex-shrink: 0;
+
     a {
       display: flex;
       flex-direction: column;
       row-gap: 0.25rem;
     }
 
-    dinkus {
+    dink-us {
       --height: 0.5rem;
 
       > div:not(:nth-child(3)) {
@@ -103,7 +112,7 @@
       border: 1px dotted transparent;
       border-radius: 1rem;
       color: var(--color-foreground);
-      font-size: 0.875rem;
+      font-size: var(--font-size-0_75);
       letter-spacing: -1%;
       padding: 0.2rem 0.6rem;
       text-decoration: none;
@@ -123,7 +132,7 @@
     }
 
     .divider {
-      font-size: 0.875rem;
+      font-size: var(--font-size-0_75);
       padding: 0.2rem 0;
       opacity: 0.5;
     }

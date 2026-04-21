@@ -1,0 +1,187 @@
+<footer webc:root="override" class="g-max-centered">
+  <div class="page-footer-contents">
+    <div class="mark">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="400"
+        height="400"
+        fill="currentColor"
+        viewBox="0 0 400 400"
+      >
+        <rect width="96" height="96" x="40.898" y="265.502" rx="48" />
+        <rect width="199.202" height="96" x="160.898" y="265.502" rx="48" />
+        <rect width="144" height="96" x="40.898" y="151.501" rx="48" />
+        <rect width="151.202" height="96" x="208.898" y="151.501" rx="48" />
+        <rect width="199.202" height="96" x="40.898" y="37.501" rx="48" />
+        <rect width="96" height="96" x="264.1" y="37.501" rx="48" />
+      </svg>
+    </div>
+
+    <nav>
+      <a href="/about">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0M12 9h.01" />
+          <path d="M11 12h1v4h1" />
+        </svg>
+        About
+      </a>
+      <a href="https://bsky.app/profile/thedistance.app">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <path
+            d="M6.335 5.144C4.681 3.945 2 3.017 2 5.97c0 .59.35 4.953.556 5.661C3.269 14.094 5.686 14.381 8 14c-4.045.665-4.889 3.208-2.667 5.41C6.363 20.428 7.246 21 8 21c2 0 3.134-2.769 3.5-3.5q.5-1 .5-1.5 0 .5.5 1.5c.366.731 1.5 3.5 3.5 3.5.754 0 1.637-.571 2.667-1.59C20.889 17.207 20.045 14.664 16 14c2.314.38 4.73.094 5.444-2.369.206-.708.556-5.072.556-5.661 0-2.953-2.68-2.025-4.335-.826C15.372 6.806 12.905 10.192 12 12c-.905-1.808-3.372-5.194-5.665-6.856"
+          />
+        </svg>
+        thedistance.app
+      </a>
+      <a href="mailto:hello@thedistance.app">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <path
+            d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+          />
+          <path d="m3 7 9 6 9-6" />
+        </svg>
+        hello@thedistance.app
+      </a>
+    </nav>
+    <p class="copyright">
+      <span>© 2026 <a href="https://latchbolt.tech">Latchbolt Inc.</a></span>
+    </p>
+  </div>
+</footer>
+
+<style webc:scoped="page-footer">
+  :host {
+    display: block;
+    padding-bottom: 2rem;
+    padding-top: 4rem;
+  }
+
+  .page-footer-contents {
+    --padding: 1rem;
+    --border-color: light-dark(
+      var(--color-accent-primary),
+      color-mix(in srgb, var(--color-accent-primary) 60%, transparent)
+    );
+    --border: 2px dotted var(--border-color);
+    border: var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+
+    .copyright {
+      justify-content: flex-end;
+      display: flex;
+      flex-direction: column;
+      font-size: var(--font-size-0_75);
+      padding: var(--padding);
+
+      a {
+        color: currentColor;
+        text-decoration: none;
+
+        &:where(:hover, :focus-visible) {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    nav {
+      border-top: var(--border);
+      border-bottom: var(--border);
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: var(--padding);
+
+      a {
+        align-items: center;
+        color: var(--color-foreground);
+        column-gap: 0.25rem;
+        display: flex;
+        width: max-content;
+
+        svg {
+          --size: 1.125rem;
+          height: var(--size);
+          transition: 0.1s ease;
+          width: var(--size);
+        }
+
+        &:where(:hover, :focus-visible) {
+          color: var(--color-accent-foreground);
+
+          svg {
+            rotate: -3deg;
+            transform: translateX(-2px);
+          }
+        }
+      }
+    }
+
+    .mark {
+      color: var(--color-accent-primary);
+      display: flex;
+      align-items: center;
+      padding: var(--padding);
+
+      svg {
+        --size: 4rem;
+        height: var(--size);
+        width: var(--size);
+      }
+    }
+  }
+
+  @media (min-width: 600px) {
+    .page-footer-contents {
+      display: flex;
+      flex-wrap: wrap;
+
+      nav {
+        border-top: 0;
+        border-bottom: 0;
+        border-left: var(--border);
+        border-right: var(--border);
+      }
+    }
+  }
+
+  @media (min-width: 720px) {
+    .page-footer-contents {
+      --padding: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,94 @@
+<details class="g-max-centered">
+  <summary>
+    <slot name="summary"></slot>
+  </summary>
+  <div class="message">
+    <div class="message-inner">
+      <slot name="message"></slot>
+    </div>
+  </div>
+</details>
+
+<style webc:scoped>
+  :host {
+    --color-base: hsl(258 100% 60%);
+    --color-bg: color-mix(in srgb, var(--color-base) 40%, transparent);
+    --color-border: color-mix(in srgb, var(--color-base) 60%, transparent);
+    color: light-dark(rgba(0 0 0 / 90%), rgba(255, 255, 255, 80%));
+    display: block;
+    padding-bottom: 1rem;
+    width: 100%;
+  }
+
+  summary {
+    --more-content: "Say more…";
+    align-items: center;
+    background: var(--color-bg);
+    border-radius: 20px;
+    gap: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    letter-spacing: -1%;
+    line-height: 1;
+    list-style: none;
+    padding: 1.25rem;
+    width: 100%;
+
+    b,
+    strong {
+      font-weight: 700;
+    }
+
+    span:has(svg) {
+      align-items: center;
+      column-gap: 0.5rem;
+      display: inline-flex;
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    &::after {
+      content: var(--more-content);
+      text-decoration: underline;
+    }
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  details[open] summary {
+    border-radius: 20px 20px 0 0;
+
+    &::after {
+      --more-content: "Say less";
+    }
+  }
+
+  .message {
+    background: var(--color-bg);
+    border-radius: 0 0 20px 20px;
+    letter-spacing: -1%;
+    padding: 0.75rem;
+    padding-top: 0;
+
+    ol,
+    ul {
+      padding-left: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p + :where(ol, ul) {
+      margin-top: 0.75rem;
+    }
+  }
+
+  .message-inner {
+    background: light-dark(rgba(255, 255, 255, 40%), rgba(0 0 0 / 30%));
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+</style>
