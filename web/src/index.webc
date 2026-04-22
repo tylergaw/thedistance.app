@@ -14,10 +14,15 @@ title: The Distance
         Anything that gets you up and moving.
       </p>
       <p>
-        Another sentence or two here to introduce the AT Protocol would be
-        helpful. Doesn’t have to be deep, just enough to provide
-        <a href="">a link</a> to a page that goes into more detail would be
-        great.
+        The maps, stats, routes, followers, everything you’re used to.<sup
+          >*</sup
+        >
+        But built on the <a href="https://atproto.com/">Atmosphere</a>, the same
+        open network as your Bluesky/Blacksky/Eurosky account. Your data stays
+        yours and goes where you go.
+      </p>
+      <p class="disclaimer">
+        <small><sup>*</sup>Eventually</small>
       </p>
     </div>
   </div>

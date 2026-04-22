@@ -201,3 +201,8 @@ b,
 strong {
   font-weight: 600;
 }
+
+sup {
+  font-size: 120%;
+  vertical-align: baseline;
+}

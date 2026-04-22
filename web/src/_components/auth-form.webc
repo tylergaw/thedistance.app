@@ -11,7 +11,68 @@
 
   <fieldset>
     <form id="login">
-      <p class="title">Log in with your Atmosphere account</p>
+      <header>
+        <p class="title">Log in with your Atmosphere account</p>
+
+        <button
+          type="button"
+          popovertarget="auth-atmo-details"
+          class="atmo-details-btn"
+        >
+          What’s an Atmosphere account?
+        </button>
+
+        <div popover id="auth-atmo-details" class="atmo-details">
+          <button
+            type="button"
+            popovertarget="auth-atmo-details"
+            class="close-btn"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" />
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+          <div class="atmo-details-contents">
+            <div class="atmo-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                fill="currentColor"
+                viewBox="0 0 32 32"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16 0a5.68 5.68 0 0 1 4.933 2.866c.172.3.532.45.865.358a5.677 5.677 0 0 1 6.978 6.978.77.77 0 0 0 .358.865 5.68 5.68 0 0 1 2.86 5.18c-.134 3.423-2.707 6.153-5.861 6.153l-.151-.002c-1.618-.045-3.073-.808-4.11-2.01a.82.82 0 0 0-1.192-.023 6.4 6.4 0 1 1-.849-9.492c.174.13.436.011.436-.206a1.067 1.067 0 1 1 2.133 0V16c.016 2.546 1.86 4.267 3.733 4.267 1.812 0 3.596-1.61 3.725-4.02v-.001l.003-.053.005-.193v-.001a3.55 3.55 0 0 0-2.135-3.253l-1.327-.575a.64.64 0 0 1-.34-.823l.532-1.344a3.544 3.544 0 0 0-3.206-4.846l-.09-.001a3.5 3.5 0 0 0-1.304.247l-1.344.532a.64.64 0 0 1-.823-.34l-.576-1.327a3.55 3.55 0 0 0-3.117-2.133L16 2.133a3.55 3.55 0 0 0-3.254 2.136l-.575 1.326a.64.64 0 0 1-.823.34l-1.344-.531a3.5 3.5 0 0 0-1.216-.246L8.7 5.157a3.544 3.544 0 0 0-3.297 4.847l.532 1.344a.64.64 0 0 1-.34.823l-1.327.575a3.545 3.545 0 0 0 0 6.507l1.326.576a.64.64 0 0 1 .34.822l-.531 1.345a3.544 3.544 0 0 0 4.6 4.6l1.344-.532a.64.64 0 0 1 .823.34l.575 1.327a3.545 3.545 0 0 0 6.507 0l.402-.927a1.051 1.051 0 0 1 1.942.808l-.387.968a5.678 5.678 0 0 1-10.143.554.77.77 0 0 0-.865-.358 5.678 5.678 0 0 1-6.978-6.978.77.77 0 0 0-.358-.865A5.68 5.68 0 0 1 0 16a5.68 5.68 0 0 1 2.866-4.933.77.77 0 0 0 .358-.865 5.678 5.678 0 0 1 6.978-6.978.77.77 0 0 0 .865-.358A5.68 5.68 0 0 1 16 0m0 11.733a4.267 4.267 0 1 0 0 8.534 4.267 4.267 0 0 0 0-8.534"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <p>
+              The Atmosphere is a new open network of apps and services that all
+              work together. Instead of every app being its own walled garden,
+              Atmosphere apps share a common foundation, so you only need one
+              account to use them all.
+            </p>
+            <p>
+              More at
+              <a href="https://atmosphereaccount.com/">atmosphereaccount.com</a
+              >.
+            </p>
+          </div>
+        </div>
+      </header>
 
       <div class="field">
         <label for="handle">Atmosphere handle</label>
@@ -21,9 +82,13 @@
           name="handle"
           autocapitalize="off"
           autocorrect="off"
-          placeholder="yourhandle.bsky.social"
+          placeholder="yourname.bsky.social"
           required
         />
+        <p class="field-note">
+          e.g., yourname.bsky.social, or your own domain like thedistance.app,
+          if you’ve set one up
+        </p>
       </div>
       <button type="submit" class="btn">
         <dink-us class="hidden"></dink-us>
@@ -57,6 +122,7 @@
   }
 
   fieldset {
+    anchor-name: --atmo-details-anchor;
     align-items: center;
     border: 2px dotted hsl(var(--color-background-hsl-light));
     border-radius: 14px;
@@ -64,21 +130,25 @@
     color: hsl(var(--color-foreground-hsl-light));
     flex: 1;
     justify-content: center;
-    padding: 1rem;
+    padding: 2rem;
     position: relative;
   }
 
   form {
+    letter-spacing: -1%;
     margin: 0 auto;
     max-width: var(--grid-max-3);
     width: 100%;
 
+    header {
+      line-height: 1.1;
+      padding: 0 0.5rem 2.5rem 0.5rem;
+    }
+
     .title {
       font-size: var(--font-size-2);
       font-weight: 500;
-      line-height: 1.1;
-      margin-bottom: 2rem;
-      padding: 0 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     &.hidden {
@@ -110,6 +180,14 @@
       font-size: var(--font-size-1_5);
       padding: 0.5rem 0.75rem;
       width: 100%;
+    }
+
+    .field-note {
+      letter-spacing: -1%;
+      line-height: 1.2;
+      opacity: 0.75;
+      padding: 0.15rem 0.5rem;
+      font-size: var(--font-size-0_75);
     }
   }
 
@@ -155,7 +233,95 @@
   }
 
   .field + .btn {
-    margin-top: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .atmo-details-btn {
+    appearance: none;
+    background: none;
+    border: none;
+    color: currentColor;
+    cursor: pointer;
+    display: inline-block;
+    font-size: var(--font-size-0_75);
+    padding: 0;
+    text-align: left;
+    text-decoration: underline;
+    transition: 0.1s ease;
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+
+  .atmo-details {
+    backdrop-filter: blur(5px);
+    background: color-mix(in srgb, var(--color-background) 90%, transparent);
+    border: 0;
+    border-radius: 100%;
+    box-shadow: 0 1px 24px
+      color-mix(in srgb, var(--color-foreground) 12%, transparent);
+    flex-direction: column;
+    opacity: 0;
+    position-anchor: --atmo-details-anchor;
+    top: anchor(top);
+    left: anchor(left);
+    height: anchor-size(height);
+    width: anchor-size(width);
+    transform: scale(0);
+    transform-origin: center;
+    transition: 0.15s, transform linear(0, 0.7, 1.1, 0.97, 1) 0.2s,
+      display 0.15s allow-discrete;
+
+    &:popover-open {
+      border-radius: 16px;
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+
+      @starting-style {
+        border-radius: 100%;
+        opacity: 0;
+        transform: scale(0);
+      }
+    }
+
+    .close-btn {
+      --size: 2rem;
+      background: none;
+      border: 1px dotted color-mix(in srgb, currentColor 25%, transparent);
+      cursor: pointer;
+      border-radius: 50%;
+      position: fixed;
+      right: 0.5rem;
+      top: 0.5rem;
+      height: var(--size);
+      width: var(--size);
+      transition: 0.1s ease;
+
+      &:active {
+        transform: scale(0.92);
+      }
+    }
+
+    .atmo-logo {
+      background: var(--color-accent-primary);
+      border-radius: 50%;
+      color: hsl(var(--color-foreground-hsl-light));
+      padding: 1rem;
+    }
+  }
+
+  .atmo-details-contents {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    padding: 2rem 3rem;
+    padding-top: 1rem;
+    text-align: center;
   }
 </style>
 

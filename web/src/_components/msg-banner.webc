@@ -20,6 +20,10 @@
     width: 100%;
   }
 
+  :host([type="error"]) {
+    --color-base: hsl(0 80% 55%);
+  }
+
   summary {
     --more-content: "Say more…";
     align-items: center;
@@ -32,7 +36,7 @@
     letter-spacing: -1%;
     line-height: 1;
     list-style: none;
-    padding: 1.25rem;
+    padding: 0.5rem 1rem;
     width: 100%;
 
     b,
