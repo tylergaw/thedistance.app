@@ -11,10 +11,9 @@
 
 <style webc:scoped>
   :host {
-    --color-base: hsl(258 100% 60%);
-    --color-bg: color-mix(in srgb, var(--color-base) 40%, transparent);
-    --color-border: color-mix(in srgb, var(--color-base) 60%, transparent);
-    color: light-dark(rgba(0 0 0 / 90%), rgba(255, 255, 255, 80%));
+    --color-base: var(--color-accent-primary);
+    --color-bg: var(--color-base);
+    color: hsl(0 0 0 / 80%);
     display: block;
     padding-bottom: 1rem;
     width: 100%;
@@ -79,6 +78,10 @@
     padding: 0.75rem;
     padding-top: 0;
 
+    a {
+      color: hsl(var(--color-accent-foreground-hsl-light));
+    }
+
     ol,
     ul {
       padding-left: 1rem;
@@ -91,8 +94,8 @@
   }
 
   .message-inner {
-    background: light-dark(rgba(255, 255, 255, 40%), rgba(0 0 0 / 30%));
+    background: color-mix(in srgb, white 60%, transparent);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
   }
 </style>
