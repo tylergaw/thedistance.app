@@ -33,7 +33,7 @@
 
     set activities(data) {
       this.loading = false;
-      this.querySelector(".preview").remove();
+      this.querySelector(".preview").classList.add("hidden");
 
       if (data.length === 0) {
         this.insertAdjacentHTML(
@@ -67,9 +67,13 @@
                 <header class="activity-header">
                   <time>${formatDate(activity.started_at)}</time>
 
-                  <a href="/profile/${this.handle || activity.did}/activity/${
-              activity.rkey
-            }">${
+                  <a href=${
+                    !activity.rkey
+                      ? "#"
+                      : `/profile/${this.handle || activity.did}/activity/${
+                          activity.rkey
+                        }`
+                  }>${
               activity.title ||
               `${getTimeOfDay(
                 activity.started_at
@@ -95,6 +99,7 @@
           .join("")}
       </ul>`;
 
+      this.querySelector("ul")?.remove();
       this.insertAdjacentHTML("beforeend", activitiesHTML);
       this.initMaps(data);
     }
@@ -206,6 +211,11 @@ async function handleDelete(e) {
     flex-direction: column;
     gap: 1rem;
 
+    &.hidden {
+      display: none;
+      visibility: hidden;
+    }
+
     > div {
       background: var(--color-foreground);
       border-radius: 20px;
@@ -259,6 +269,12 @@ async function handleDelete(e) {
     a {
       font-weight: 600;
       font-size: var(--font-size-2);
+    }
+
+    a[href="#"] {
+      color: var(--color-foreground);
+      text-decoration: none;
+      pointer-events: none;
     }
   }
 

@@ -260,7 +260,10 @@
     border: 0;
     border-radius: 100%;
     box-shadow: 0 1px 24px
-      color-mix(in srgb, var(--color-foreground) 12%, transparent);
+      light-dark(
+        hsl(var(--color-foreground-hsl-light) / 12%),
+        hsl(var(--color-background-hsl-dark) / 90%)
+      );
     flex-direction: column;
     opacity: 0;
     position-anchor: --atmo-details-anchor;
@@ -332,7 +335,7 @@
     const handle = input.value.trim();
     if (!handle) return;
 
-    const btn = e.target.querySelector("button");
+    const btn = e.target.querySelector("button[type=submit]");
     btn.disabled = true;
 
     const btnText = btn.querySelector("span");
