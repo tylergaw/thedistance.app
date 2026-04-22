@@ -196,21 +196,28 @@ def set_cursor(conn, cursor_value):
 
 
 def list_activities(conn, limit=50, offset=0, sport_type=None, did=None):
-    query = "SELECT * FROM activities"
+    query = """
+        SELECT a.*,
+            p.handle AS owner_handle,
+            p.display_name AS owner_display_name,
+            p.avatar_url AS owner_avatar_url
+        FROM activities a
+        LEFT JOIN profiles p ON a.did = p.did
+    """
     params = []
     conditions = []
 
     if did:
-        conditions.append("did = %s")
+        conditions.append("a.did = %s")
         params.append(did)
     if sport_type:
-        conditions.append("sport_type = %s")
+        conditions.append("a.sport_type = %s")
         params.append(sport_type)
 
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
 
-    query += " ORDER BY started_at DESC LIMIT %s OFFSET %s"
+    query += " ORDER BY a.started_at DESC LIMIT %s OFFSET %s"
     params.extend([limit, offset])
 
     return conn.execute(query, params).fetchall()
@@ -373,6 +380,14 @@ def has_profile(conn, did):
 
 def get_activity(conn, did, rkey):
     return conn.execute(
-        "SELECT * FROM activities WHERE did = %s AND rkey = %s",
+        """
+        SELECT a.*,
+            p.handle AS owner_handle,
+            p.display_name AS owner_display_name,
+            p.avatar_url AS owner_avatar_url
+        FROM activities a
+        LEFT JOIN profiles p ON a.did = p.did
+        WHERE a.did = %s AND a.rkey = %s
+        """,
         (did, rkey),
     ).fetchone()
