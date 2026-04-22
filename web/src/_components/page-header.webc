@@ -11,11 +11,15 @@
     </a>
   </h1>
 
-  <nav id="page-header-nav">
-    <a :href="loginHref" class="btn" id="page-header-auth-btn">Log in / Join</a>
-  </nav>
+  <div class="controls">
+    <nav id="page-header-nav">
+      <a :href="loginHref" class="btn" id="page-header-auth-btn"
+        >Log in / Join</a
+      >
+    </nav>
 
-  <scheme-chooser></scheme-chooser>
+    <scheme-chooser></scheme-chooser>
+  </div>
 </header>
 
 <script webc:bucket="components">
@@ -68,10 +72,25 @@
     --padding-h: 1.5rem;
     align-items: center;
     column-gap: 0.5rem;
+    row-gap: 1rem;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 1.2rem var(--padding-h) 1rem var(--padding-h);
+  }
+
+  @media (min-width: 500px) {
+    :host {
+      flex-direction: row;
+    }
+  }
+
+  .controls {
+    flex-shrink: 0;
+    column-gap: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
   }
 
   @media (min-width: 600px) {
@@ -81,8 +100,6 @@
   }
 
   h1 {
-    flex-shrink: 0;
-
     a {
       display: flex;
       flex-direction: column;
