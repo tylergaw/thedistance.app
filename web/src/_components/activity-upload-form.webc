@@ -2,7 +2,10 @@
   <form>
     <label>
       <p>Drop one or more files here or <a>Browse</a> to select.</p>
-      <p>Accepted file types: .fit, <s>.gpx</s>, <s>.tcx</s></p>
+      <p>
+        Accepted file types: .fit, <s>.gpx</s>, <s>.tcx</s> (in progress).
+        You’ll get a chance to preview before saving.
+      </p>
       <input type="file" accept=".fit" multiple hidden disabled />
 
       <div class="messages"><p class="placeholder">&nbsp;</p></div>

@@ -169,6 +169,10 @@ h6 {
   padding-right: var(--padding-h);
 }
 
+.g-max-4 {
+  max-width: var(--grid-max-4);
+}
+
 .g-max-5 {
   max-width: var(--grid-max-5);
 }
