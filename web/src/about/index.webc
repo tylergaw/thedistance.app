@@ -4,5 +4,51 @@ title: About - The Distance
 ---
 
 <div class="g-max-centered">
-  <h1>About</h1>
+  <div class="contents">
+    <h2>What’s all this then?</h2>
+    <p>
+      Right now, this is a solo venture of
+      <a href="https://bsky.app/profile/tylergaw.com">Tyler’s</a> (under
+      Latchbolt Inc, the company he uses to do side quests). He started it in
+      April 2026 as an excuse to learn how to build with AT Protocol.
+    </p>
+    <p>
+      The goal is to reimagine similar products that exist today, but built with
+      open technologies. Built in a way that gives users control over their
+      data. And ultimately built to serve them, not built to serve the needs of
+      a business.
+    </p>
+    <p>
+      This is very new and extremely in-progress. Reach out if you have
+      feedback, feature requests, want to help out. And especially reach out if
+      you want to write any small to medium sized checks to fund ongoing
+      development and operating costs.
+    </p>
+    <p>Any of these work:</p>
+    <ul>
+      <li>
+        <a href="https://bsky.app/profile/thedistance.app">
+          @thedistance.app
+        </a>
+      </li>
+      <li>
+        <a href="mailto:hello@thedistance.app">hello@thedistance.app</a>
+      </li>
+      <li>
+        <a href="https://bsky.app/profile/tylergaw.com">@tylergaw.com</a>
+      </li>
+    </ul>
+  </div>
 </div>
+
+<style webc:scoped>
+  .contents {
+    margin: 0 auto;
+    max-width: var(--grid-max-4);
+    padding-top: 2rem;
+
+    p + p {
+      margin-top: 1rem;
+    }
+  }
+</style>
