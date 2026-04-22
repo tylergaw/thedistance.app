@@ -1,46 +1,62 @@
 <div webc:root>
-  <form class="hidden">
+  <form>
     <label>
       <p>Drop one or more files here or <a>Browse</a> to select.</p>
       <p>Accepted file types: .fit, <s>.gpx</s>, <s>.tcx</s></p>
-      <input type="file" accept=".fit" multiple hidden />
+      <input type="file" accept=".fit" multiple hidden disabled />
+
+      <div class="messages"><p class="placeholder">&nbsp;</p></div>
     </label>
-    <div class="error-container"></div>
-    <div class="status-container"></div>
   </form>
-  <div class="contents">
+  <div class="activity-preview">
     <activity-list></activity-list>
   </div>
 </div>
 
 <style webc:scoped>
   :host {
+    display: block;
+  }
+
+  :host.has-items {
     display: flex;
     gap: 1.3125rem;
     flex-wrap: wrap;
+    flex-direction: column;
+
+    .activity-preview {
+      display: block;
+      flex: 1;
+    }
   }
 
-  .contents {
-    flex: 1;
-    min-width: var(--grid-max-3);
+  @media (min-width: 940px) {
+    :host.has-items {
+      flex-direction: row;
+    }
+  }
+
+  .activity-preview {
+    display: none;
   }
 
   form {
     flex: 1;
-    max-width: var(--grid-max-5);
-    min-width: var(--grid-max-2);
   }
 
   label {
-    border: 2px dashed
+    border: 3px dashed
       color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
     border-radius: 20px;
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     row-gap: 0.75rem;
-    padding: 3rem 1.5rem;
+    padding: 3rem 1.5rem 1rem 1.5rem;
+    position: relative;
     text-align: center;
 
+    &:not(&:has(input[disabled])):where(:hover, :focus-visible),
     &.drag-over {
       background-color: color-mix(
         in srgb,
@@ -48,6 +64,19 @@
         transparent
       );
       border-color: var(--color-accent-primary);
+    }
+
+    &:has(input[disabled]) {
+      border-color: color-mix(in srgb, currentColor 10%, transparent);
+      cursor: not-allowed;
+
+      a {
+        pointer-events: none;
+      }
+
+      p:not(.messages p) {
+        opacity: 50%;
+      }
     }
 
     p {
@@ -63,6 +92,31 @@
     a {
       cursor: pointer;
       text-decoration: underline;
+    }
+
+    .messages {
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      width: 100%;
+
+      p {
+        background: hsl(var(--color-accent-foreground-hsl-dark));
+        border-radius: 16px;
+        color: white;
+        font-size: var(--font-size-0_75);
+        padding: 0.35rem 0.75rem;
+        text-align: center;
+
+        &.error {
+          background: var(--color-accent-error);
+        }
+
+        &.placeholder {
+          opacity: 0;
+        }
+      }
     }
   }
 
@@ -128,12 +182,11 @@
         const { user } = e.detail;
 
         if (!user) {
-          this.showError("You must be signed in to save activities.");
+          this.showError("Log in to upload Activities");
           return;
         }
 
         this.user = user;
-        this.form.classList.remove("hidden");
         this.initDropZone();
       });
     }
@@ -141,6 +194,8 @@
     initDropZone() {
       const dropZone = this.querySelector("label");
       const fileInput = this.querySelector("input[type=file]");
+
+      fileInput.removeAttribute("disabled");
 
       dropZone.addEventListener("dragover", (e) => {
         e.preventDefault();
@@ -171,12 +226,8 @@
       return this.querySelector("form");
     }
 
-    get errorContainer() {
-      return this.querySelector(".error-container");
-    }
-
-    get statusContainer() {
-      return this.querySelector(".status-container");
+    get messagesContainer() {
+      return this.querySelector(".messages");
     }
 
     get activityList() {
@@ -184,24 +235,20 @@
     }
 
     showError(message) {
-      this.errorContainer.innerHTML = `<p class="error">${message}</p>`;
-    }
-
-    clearError() {
-      this.errorContainer.innerHTML = "";
+      this.messagesContainer.innerHTML = `<p class="error">${message}</p>`;
     }
 
     showStatus(message) {
-      this.statusContainer.innerHTML = `<p class="loading">${message}</p>`;
+      this.messagesContainer.innerHTML = `<p class="status">${message}</p>`;
     }
 
-    clearStatus() {
-      this.statusContainer.innerHTML = "";
+    clearMessages() {
+      this.messagesContainer.innerHTML = "<p class='placeholder'>&nbsp;</p>";
     }
 
     async handleUpload(files) {
-      this.clearError();
-      this.showStatus("Parsing…");
+      this.clearMessages();
+      this.showStatus("🎶 He’s going for speed…");
 
       const formData = new FormData();
       for (const file of files) {
@@ -218,7 +265,7 @@
         if (!res.ok) {
           const err = await res.json();
           this.showError(err.error || "Upload failed");
-          this.clearStatus();
+          this.clearMessages();
           return;
         }
 
@@ -226,38 +273,44 @@
         const activities = data.activities;
 
         if (activities.length === 0) {
-          this.clearStatus();
-          this.showStatus("No activities found in uploaded files.");
+          this.clearMessages();
+          this.showError("No activities found in uploaded files");
           return;
         }
 
         this.parsedActivities = activities;
-        this.clearStatus();
+        this.clearMessages();
         this.showPreview(activities);
       } catch (err) {
         this.showError(err.message);
-        this.clearStatus();
+        this.clearMessages();
       }
     }
 
     showPreview(activities) {
+      this.classList.add("has-items");
+
       const list = this.activityList;
       list.handle = this.user.handle;
       list.activities = activities;
 
-      const btn = `
+      const hasBtns = this.querySelector(".save-btn");
+
+      if (!hasBtns) {
+        const btn = `
         <button type="button" class="btn save-btn">
           <div class="temp-dinkus hidden">•••</div>
           <span>Save ${activities.length > 1 ? "Activities" : "Activity"}</span>
         </button>
       `;
 
-      list.insertAdjacentHTML("beforebegin", btn);
-      list.insertAdjacentHTML("afterend", btn);
+        list.insertAdjacentHTML("beforebegin", btn);
+        list.insertAdjacentHTML("afterend", btn);
 
-      this.querySelectorAll(".save-btn").forEach((el) => {
-        el.addEventListener("click", () => this.handleCreate());
-      });
+        this.querySelectorAll(".save-btn").forEach((el) => {
+          el.addEventListener("click", () => this.handleCreate());
+        });
+      }
     }
 
     setSaveButtonsLoading(loading) {
@@ -271,7 +324,7 @@
 
     async handleCreate() {
       this.setSaveButtonsLoading(true);
-      this.clearError();
+      this.clearMessages();
 
       const errors = [];
 

@@ -33,7 +33,7 @@
 
     set activities(data) {
       this.loading = false;
-      this.querySelector(".preview").remove();
+      this.querySelector(".preview").classList.add("hidden");
 
       if (data.length === 0) {
         this.insertAdjacentHTML(
@@ -95,6 +95,7 @@
           .join("")}
       </ul>`;
 
+      this.querySelector("ul")?.remove();
       this.insertAdjacentHTML("beforeend", activitiesHTML);
       this.initMaps(data);
     }
@@ -205,6 +206,11 @@ async function handleDelete(e) {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
+    &.hidden {
+      display: none;
+      visibility: hidden;
+    }
 
     > div {
       background: var(--color-foreground);
