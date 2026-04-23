@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2">
+  <Activities>
+    <Activity Sport="Biking">
+      <Lap StartTime="2025-03-15T08:00:00Z">
+        <TotalTimeSeconds>900</TotalTimeSeconds>
+        <DistanceMeters>5000.0</DistanceMeters>
+        <Calories>150</Calories>
+        <Track>
+          <Trackpoint>
+            <Time>2025-03-15T08:00:00Z</Time>
+            <Position>
+              <LatitudeDegrees>40.7128</LatitudeDegrees>
+              <LongitudeDegrees>-74.0060</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>10.0</AltitudeMeters>
+            <HeartRateBpm><Value>120</Value></HeartRateBpm>
+            <Cadence>80</Cadence>
+          </Trackpoint>
+          <Trackpoint>
+            <Time>2025-03-15T08:05:00Z</Time>
+            <Position>
+              <LatitudeDegrees>40.7138</LatitudeDegrees>
+              <LongitudeDegrees>-74.0050</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>15.0</AltitudeMeters>
+            <HeartRateBpm><Value>135</Value></HeartRateBpm>
+            <Cadence>85</Cadence>
+          </Trackpoint>
+          <Trackpoint>
+            <Time>2025-03-15T08:10:00Z</Time>
+            <Position>
+              <LatitudeDegrees>40.7148</LatitudeDegrees>
+              <LongitudeDegrees>-74.0040</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>12.0</AltitudeMeters>
+            <HeartRateBpm><Value>140</Value></HeartRateBpm>
+            <Cadence>90</Cadence>
+          </Trackpoint>
+          <Trackpoint>
+            <Time>2025-03-15T08:15:00Z</Time>
+            <Position>
+              <LatitudeDegrees>40.7158</LatitudeDegrees>
+              <LongitudeDegrees>-74.0030</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>20.0</AltitudeMeters>
+            <HeartRateBpm><Value>130</Value></HeartRateBpm>
+            <Cadence>82</Cadence>
+          </Trackpoint>
+        </Track>
+      </Lap>
+    </Activity>
+  </Activities>
+</TrainingCenterDatabase>
