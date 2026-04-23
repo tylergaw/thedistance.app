@@ -172,8 +172,9 @@ class TestParseTcx:
     def test_source_is_tcx_file(self, ride):
         assert ride["source"] == "tcx-file"
 
-    def test_sport_type_from_activity(self, ride):
-        assert ride["sport_type"] == "biking"
+    def test_sport_type_normalized(self, ride):
+        # TCX uses "Biking" but we normalize to FIT's "cycling"
+        assert ride["sport_type"] == "cycling"
 
     def test_times_from_lap_summary(self, ride):
         assert isinstance(ride["elapsed_time"], int)

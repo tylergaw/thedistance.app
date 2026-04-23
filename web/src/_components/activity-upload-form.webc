@@ -3,8 +3,8 @@
     <label>
       <p>Drop one or more files here or <a>Browse</a> to select.</p>
       <p>
-        Accepted file types: .fit, .gpx, .tcx.
-        You’ll get a chance to preview before saving.
+        Accepted file types: .fit, .gpx, .tcx. You’ll get a chance to preview
+        before saving.
       </p>
       <input type="file" accept=".fit,.gpx,.tcx" multiple hidden disabled />
 
@@ -330,6 +330,7 @@
       this.clearMessages();
 
       const errors = [];
+      const created = [];
 
       for (const activity of this.parsedActivities) {
         try {
@@ -347,6 +348,9 @@
             } catch {
               errors.push(`Save failed (HTTP ${res.status})`);
             }
+          } else {
+            const data = await res.json();
+            created.push(data);
           }
         } catch (err) {
           errors.push(err.message);
@@ -354,14 +358,18 @@
       }
 
       if (errors.length > 0) {
-        this.errorContainer.innerHTML = errors
-          .map((e) => `<p class="error">${e}</p>`)
-          .join("");
+        const errMsg = errors.map((e) => `${e}<br/>`).join("");
+        this.showError(errMsg);
         this.setSaveButtonsLoading(false);
         return;
       }
 
-      window.location.href = `/profile/${this.user.handle}`;
+      if (created.length === 1) {
+        const { rkey } = created[0];
+        window.location.href = `/profile/${this.user.handle}/activity/${rkey}`;
+      } else {
+        window.location.href = `/profile/${this.user.handle}`;
+      }
     }
   }
 

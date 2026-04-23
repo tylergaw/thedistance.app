@@ -301,6 +301,29 @@ def _generate_title(sport_type, start_time) -> str:
     return f"{time_of_day} {sport_display}"
 
 
+def _normalize_sport_type(sport_type: str | None) -> str:
+    """Normalize sport type labels to FIT canonical values.
+
+    Different file formats use different names for the same sport (e.g. TCX uses
+    "Biking" while FIT uses "cycling"). We normalize to FIT values so the database
+    stays consistent regardless of upload format.
+    """
+    if not sport_type:
+        return "unknown"
+
+    normalized = str(sport_type).lower().replace(" ", "_")
+
+    synonyms = {
+        "biking": "cycling",
+        "road_biking": "cycling",
+        "mountain_biking": "mountain_biking",
+        "running": "running",
+        "jogging": "running",
+    }
+
+    return synonyms.get(normalized, normalized)
+
+
 def _build_activity(
     *,
     sport_type,
@@ -324,9 +347,10 @@ def _build_activity(
     device_name=None,
 ) -> dict:
     """Build the activity dict with required and optional fields."""
+    sport_type = _normalize_sport_type(sport_type)
     activity = {
         "title": _generate_title(sport_type, start_time),
-        "sport_type": str(sport_type) if sport_type else "unknown",
+        "sport_type": sport_type,
         "started_at": started_at,
         "elapsed_time": int(elapsed_time) if elapsed_time else 0,
         "moving_time": int(moving_time) if moving_time else 0,
