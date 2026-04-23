@@ -131,40 +131,6 @@ async function getActivity(did, rkey) {
   }
 }
 
-/**
- * @param {string} type
- * @returns {string}
- */
-function getActivityTypeDisplayName(type) {
-  let displayName;
-
-  switch (type) {
-    case "cycling":
-      displayName = "ride";
-      break;
-    case "walking":
-      displayName = "walk";
-      break;
-    case "hiking":
-      displayName = "hike";
-      break;
-    default:
-      displayName = type;
-  }
-
-  return toTitleCase(displayName);
-}
-
-/**
- * @param {string} iso
- * @returns {string}
- */
-function getTimeOfDay(iso) {
-  const hour = new Date(iso).getHours();
-  if (hour < 12) return "Morning";
-  if (hour < 17) return "Afternoon";
-  return "Evening";
-}
 
 function metersToMiles(m) {
   return (parseFloat(m) / 1609.344).toFixed(1);
@@ -178,13 +144,6 @@ function metersToFeet(m) {
   return Math.round(parseFloat(m) * 3.28084);
 }
 
-/**
- * @param {string} str
- * @returns {string}
- */
-function toTitleCase(str) {
-  return str.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
-}
 
 function formatDuration(seconds) {
   const h = Math.floor(seconds / 3600);

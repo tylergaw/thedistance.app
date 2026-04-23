@@ -62,28 +62,35 @@
               ? "#"
               : `/profile/${ownerId}/activity/${activity.rkey}`;
 
-            const activityTitle =
-              activity.title ||
-              `${getTimeOfDay(
-                activity.started_at
-              )} ${getActivityTypeDisplayName(activity.sport_type)}`;
+            const activityTitle = activity.title;
 
             return `<li>
               <div class="activity" id="activity-${activity.rkey}">
                 <header class="activity-header">
-                  <a href="${ownerURL}" class="avatar">
-                    ${
-                      activity.owner_avatar_url
-                        ? `<img src="${activity.owner_avatar_url}" alt="" />`
-                        : ""
-                    }
-                  </a>
-
+                  ${
+                    activity.did
+                      ? `
+                    <a href="${ownerURL}" class="avatar">
+                      ${
+                        activity.owner_avatar_url
+                          ? `<img src="${activity.owner_avatar_url}" alt="" />`
+                          : ""
+                      }
+                    </a>`
+                      : ""
+                  }
+                  
                   <div class="details">
                     <div class="byline">
+                      ${
+                        activity.did
+                          ? `
                       <a href="${ownerURL}">${this.getOwnerFullDisplayName(
-              activity
-            )}</a> • 
+                              activity
+                            )}
+                      </a> • `
+                          : ""
+                      }
                       <time datetime="${activity.started_at}">
                         <a href=${activityURL}>${formatDate(
               activity.started_at
