@@ -71,10 +71,10 @@
 
     &:has(input[disabled]) {
       border-color: color-mix(in srgb, currentColor 10%, transparent);
-      cursor: not-allowed;
+      cursor: default;
 
-      a {
-        pointer-events: none;
+      a:not([href]) {
+        cursor: default;
       }
 
       p:not(.messages p) {
@@ -119,6 +119,10 @@
         &.placeholder {
           opacity: 0;
         }
+      }
+
+      a {
+        color: inherit;
       }
     }
   }
@@ -185,7 +189,7 @@
         const { user } = e.detail;
 
         if (!user) {
-          this.showError("Log in to upload Activities");
+          this.showError("<a href='/login'>Log in</a> to upload Activities");
           return;
         }
 
