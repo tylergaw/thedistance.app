@@ -24,12 +24,22 @@ title: Activity - The Distance
   );
   const activityIdentifier = activityPathMatch ? activityPathMatch[1] : null;
   const activityRkey = activityPathMatch ? activityPathMatch[2] : null;
-  const activityIdentifierIsDid =
-    activityIdentifier && activityIdentifier.startsWith("did:");
 
-  async function renderActivity(did, handle) {
-    const { data, error } = await getActivity(did, activityRkey);
+  async function renderActivity() {
     const list = document.getElementById("activity-detail");
+    let did = activityIdentifier;
+
+    if (!activityIdentifier.startsWith("did:")) {
+      const foundUser = await getUserByHandle(activityIdentifier);
+      if (!foundUser) {
+        list.loading = false;
+        list.insertAdjacentHTML("beforeend", "<p>Activity not found</p>");
+        return;
+      }
+      did = foundUser.did;
+    }
+
+    const { data, error } = await getActivity(did, activityRkey);
 
     if (error || !data) {
       list.loading = false;
@@ -37,32 +47,8 @@ title: Activity - The Distance
       return;
     }
 
-    list.handle = handle;
     list.activities = [data];
   }
 
-  document.addEventListener("afterAuthCheck", (e) => {
-    const { user } = e.detail;
-
-    if (activityIdentifierIsDid) {
-      const handle =
-        user && user.did === activityIdentifier ? user.handle : null;
-      renderActivity(activityIdentifier, handle);
-    } else {
-      // Identifier is a handle, resolve to DID
-      if (user && user.handle === activityIdentifier) {
-        renderActivity(user.did, user.handle);
-      } else {
-        getUserByHandle(activityIdentifier).then((foundUser) => {
-          if (!foundUser) {
-            const list = document.getElementById("activity-detail");
-            list.loading = false;
-            list.insertAdjacentHTML("beforeend", "<p>Activity not found</p>");
-            return;
-          }
-          renderActivity(foundUser.did, foundUser.handle);
-        });
-      }
-    }
-  });
+  renderActivity();
 </script>
