@@ -315,10 +315,6 @@ def _normalize_sport_type(sport_type: str | None) -> str:
 
     synonyms = {
         "biking": "cycling",
-        "road_biking": "cycling",
-        "mountain_biking": "mountain_biking",
-        "running": "running",
-        "jogging": "running",
     }
 
     return synonyms.get(normalized, normalized)
