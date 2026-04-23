@@ -86,7 +86,7 @@
   :host {
     display: block;
     padding-bottom: 2rem;
-    padding-top: 4rem;
+    padding-top: 2rem;
   }
 
   .page-footer-contents {

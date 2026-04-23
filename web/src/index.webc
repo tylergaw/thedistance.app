@@ -29,6 +29,22 @@ title: The Distance
   <auth-form></auth-form>
 </div>
 
+<div class="home-recent g-max-centered">
+  <div class="recent-contents-container">
+    <h2>Lately <dink-us></dink-us></h2>
+    <activity-list id="home-activities" class="tiled" loading></activity-list>
+  </div>
+</div>
+
+<script webc:bucket="components">
+  getActivities(null, { limit: 6 }).then(({ data }) => {
+    const list = document.getElementById("home-activities");
+    if (data) {
+      list.activities = data;
+    }
+  });
+</script>
+
 <style>
   .home-intro {
     display: flex;
@@ -69,6 +85,60 @@ title: The Distance
 
     > div:nth-child(2) {
       flex: 1;
+    }
+  }
+
+  .home-recent {
+    padding-top: 2rem;
+  }
+
+  .recent-contents-container {
+    padding-top: 1.25rem;
+
+    h2 {
+      --pb: 0.75rem;
+      align-items: center;
+      gap: 0.5rem;
+      display: flex;
+      font-size: var(--font-size-1_5);
+      line-height: 1;
+      letter-spacing: -1%;
+      font-weight: 600;
+      padding-bottom: var(--pb);
+      padding-left: 0.3rem;
+
+      dink-us {
+        --height: 0.4rem;
+        flex: 1;
+        margin-top: 0.1rem;
+        max-width: 100px;
+
+        & > div:nth-child(1) {
+          flex: 1;
+        }
+
+        & > div:nth-child(2) {
+          flex: 1;
+          max-width: 2rem;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 480px) {
+    .recent-contents-container {
+      background-color: light-dark(hsl(48 87% 95%), hsl(51 11% 10%));
+      border: 1px solid
+        light-dark(
+          var(--color-accent-primary),
+          color-mix(in srgb, var(--color-accent-primary) 60%, transparent)
+        );
+      border-radius: 20px;
+      padding: 2rem;
+
+      h2 {
+        --pb: 1.6rem;
+      }
     }
   }
 
