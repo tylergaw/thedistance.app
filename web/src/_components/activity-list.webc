@@ -49,10 +49,14 @@
                 label: "Moving Time",
                 value: `${formatDuration(activity.moving_time)}`,
               },
-              {
-                label: "Elev Gain",
-                value: `${metersToFeet(activity.elevation_gain)} ft`,
-              },
+              ...(activity.elevation_gain
+                ? [
+                    {
+                      label: "Elev Gain",
+                      value: `${metersToFeet(activity.elevation_gain)} ft`,
+                    },
+                  ]
+                : []),
             ];
 
             const ownerId = activity.owner_handle || activity.did;
@@ -271,6 +275,11 @@ async function handleDelete(e) {
       column-gap: var(--grid-gutter);
       row-gap: 1.25rem;
     }
+
+    li {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   @media (min-width: 480px) {
@@ -329,10 +338,14 @@ async function handleDelete(e) {
     background: var(--color-background);
     border: 1px dotted color-mix(in srgb, currentColor 20%, transparent);
     border-radius: 20px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     overflow: hidden;
   }
 
   .activity-header {
+    flex: 1;
     display: flex;
     gap: 0.75rem;
     padding: 1rem;
@@ -341,15 +354,19 @@ async function handleDelete(e) {
   .byline {
     align-items: center;
     display: flex;
-    flex-wrap: wrap;
     font-size: var(--font-size-0_75);
     gap: 0.25rem;
-    line-height: 1;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
     padding-bottom: 0.1rem;
 
     a {
       color: var(--color-foreground);
+      overflow: hidden;
       text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       &:where(:hover, :focus-visible) {
         text-decoration: underline;
@@ -359,10 +376,15 @@ async function handleDelete(e) {
     b {
       font-weight: 700;
     }
+
+    time {
+      flex-shrink: 0;
+    }
   }
 
   .details {
     flex: 1;
+    overflow: hidden;
 
     .title {
       font-weight: 500;
@@ -392,18 +414,6 @@ async function handleDelete(e) {
     .stat-label {
       font-size: var(--font-size-0_75);
       line-height: 0.9;
-
-      &::before {
-        --size: 6px;
-        background: var(--color-accent-primary);
-        border-radius: 50%;
-        content: "";
-        display: inline-block;
-        margin-right: -4px;
-        height: var(--size);
-        width: var(--size);
-        transform: translateX(-8px) translateY(-2px);
-      }
     }
 
     .stat-value {
@@ -420,6 +430,7 @@ async function handleDelete(e) {
     box-shadow: 0 0 1px
       color-mix(in srgb, var(--color-foreground) 20%, transparent);
     display: block;
+    flex-shrink: 0;
     height: var(--size);
     overflow: hidden;
     width: var(--size);
