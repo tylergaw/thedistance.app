@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 
+import httpx
 import websockets
 
 from app.db import (
@@ -15,6 +16,7 @@ from app.db import (
     upsert_activity,
     upsert_profile,
 )
+from app.identity import fetch_profile, handle_from_doc, pds_endpoint, resolve_did
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -77,6 +79,40 @@ def handle_profile_event(conn, did, op, commit):
     log.info("Updated profile for %s", did)
 
 
+def ensure_profile(conn, did):
+    """Fetch and store a profile for a DID that has no local profile row.
+
+    Resolves the DID to find the PDS URL and handle, then fetches the profile
+    record. If any step fails, we still create a minimal profile row with the
+    handle so the activity has some owner info.
+    """
+    try:
+        with httpx.Client() as client:
+            doc = resolve_did(client, did)
+            if not doc:
+                log.warning("Could not resolve DID for profile: %s", did)
+                return
+
+            handle = handle_from_doc(doc)
+            pds_url = pds_endpoint(doc)
+
+            profile = fetch_profile(client, did, pds_url)
+
+        if profile:
+            upsert_profile(
+                conn, did, handle or did,
+                profile["display_name"],
+                profile["description"],
+                profile["avatar_url"],
+            )
+        else:
+            upsert_profile(conn, did, handle or did, None, None, None)
+
+        log.info("Fetched profile for %s", did)
+    except Exception:
+        log.exception("Failed to fetch profile for %s", did)
+
+
 async def subscribe():
     init_db()
     conn = get_connection()
@@ -113,6 +149,8 @@ async def subscribe():
                                 if record:
                                     upsert_activity(conn, did, rkey, record)
                                     log.info("Indexed %s %s/%s", op, did, rkey)
+                                    if not has_profile(conn, did):
+                                        ensure_profile(conn, did)
                             elif op == "delete":
                                 delete_activity(conn, did, rkey)
                                 log.info("Deleted %s/%s", did, rkey)

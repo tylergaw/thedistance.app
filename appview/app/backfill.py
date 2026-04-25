@@ -2,8 +2,8 @@ import logging
 
 import httpx
 
-from app.db import get_connection, upsert_activity
-from app.identity import resolve_identity
+from app.db import get_connection, has_profile, upsert_activity, upsert_profile
+from app.identity import fetch_profile, resolve_identity
 
 log = logging.getLogger(__name__)
 
@@ -33,11 +33,11 @@ def list_records(client, pds, did):
             break
 
 
-def backfill(handle):
-    log.info("Starting backfill for %s", handle)
+def backfill(identifier):
+    log.info("Starting backfill for %s", identifier)
 
     with httpx.Client() as client:
-        did, resolved_handle, pds = resolve_identity(client, handle)
+        did, resolved_handle, pds = resolve_identity(client, identifier)
         log.info("Resolved %s to %s (PDS: %s)", resolved_handle, did, pds)
 
         conn = get_connection()
@@ -47,8 +47,21 @@ def backfill(handle):
                 upsert_activity(conn, did, rkey, record)
                 count += 1
                 log.info("Backfilled %s/%s", did, rkey)
+
+            if not has_profile(conn, did):
+                profile = fetch_profile(client, did, pds)
+                if profile:
+                    upsert_profile(
+                        conn, did, resolved_handle,
+                        profile["display_name"],
+                        profile["description"],
+                        profile["avatar_url"],
+                    )
+                else:
+                    upsert_profile(conn, did, resolved_handle, None, None, None)
+                log.info("Backfilled profile for %s", did)
         finally:
             conn.close()
 
-    log.info("Backfill complete for %s: %d records", handle, count)
+    log.info("Backfill complete for %s: %d records", identifier, count)
     return {"did": did, "records": count}

@@ -72,14 +72,14 @@ uv run subscribe
 
 ### Backfill
 
-The subscriber only indexes records as they are created or updated in real time. If a user already has `app.thedistance.activity` records on their PDS from before the subscriber was running, those records will not be in the database. The backfill command fetches all existing records from a user's PDS and indexes them:
+The subscriber only indexes records as they are created or updated in real time. If a user already has `app.thedistance.activity` records on their PDS from before the subscriber was running, those records will not be in the database. The backfill command fetches all existing records from a user's PDS and indexes them. It also fetches and stores the user's profile if one is not already indexed.
 
 ```
 cd appview
-uv run backfill <handle>
+uv run backfill <handle-or-did>
 ```
 
-There is also an API endpoint `POST /api/backfill` that does the same thing, restricted to the authenticated user's own account.
+There is also an API endpoint `POST /api/backfill` that accepts `{"handle": "..."}` or `{"did": "..."}`, restricted to the authenticated user's own account.
 
 ### Tests
 

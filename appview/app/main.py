@@ -37,7 +37,6 @@ from app.identity import (
     fetch_profile,
     is_valid_did,
     is_valid_handle,
-    resolve_handle,
     resolve_identity,
 )
 from app.parse import parse_file
@@ -155,31 +154,28 @@ def get_activity_endpoint(did: str, rkey: str):
 
 # --- Backfill endpoint ---
 
-class BackfillRequest:
-    def __init__(self, handle: str):
-        self.handle = handle
-
-
 @app.post("/api/backfill")
 def backfill_endpoint(
     req: dict,
     background_tasks: BackgroundTasks,
     session: dict = Depends(require_auth),
 ):
-    handle = req.get("handle")
-    if not handle:
-        return JSONResponse(status_code=400, content={"error": "handle is required"})
+    identifier = req.get("handle") or req.get("did")
+    if not identifier:
+        return JSONResponse(
+            status_code=400, content={"error": "handle or did is required"}
+        )
 
     with httpx.Client() as client:
-        handle_did = resolve_handle(client, handle)
+        did, _, _ = resolve_identity(client, identifier)
 
-    if handle_did != session["did"]:
+    if did != session["did"]:
         return JSONResponse(
             status_code=403, content={"error": "You can only backfill your own account"}
         )
 
-    background_tasks.add_task(run_backfill, handle)
-    return {"status": "started", "handle": handle}
+    background_tasks.add_task(run_backfill, identifier)
+    return {"status": "started", "did": did}
 
 
 # --- Identity endpoints ---

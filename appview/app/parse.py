@@ -282,9 +282,12 @@ def parse_tcx(data: bytes) -> dict:
 def _generate_title(sport_type, start_time) -> str:
     """Generate a default title like 'Morning Ride' from sport type and time of day."""
     sport_display_names = {"cycling": "Ride", "walking": "Walk", "hiking": "Hike"}
-    sport_display = sport_display_names.get(
-        str(sport_type), str(sport_type).replace("_", " ").title()
-    )
+    if not sport_type or sport_type == "unknown":
+        sport_display = "Activity"
+    else:
+        sport_display = sport_display_names.get(
+            str(sport_type), str(sport_type).replace("_", " ").title()
+        )
 
     if isinstance(start_time, datetime):
         hour = start_time.hour
