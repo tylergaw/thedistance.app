@@ -30,11 +30,11 @@ def backfill():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
     if len(sys.argv) < 2:
-        print("Usage: uv run backfill <handle>")
+        print("Usage: uv run backfill <handle-or-did>")
         sys.exit(1)
 
-    handle = sys.argv[1]
-    result = _backfill(handle)
+    identifier = sys.argv[1]
+    result = _backfill(identifier)
     print(f"Backfilled {result['records']} records for {result['did']}")
 
 
