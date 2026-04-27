@@ -135,7 +135,8 @@
       padding: 0.2rem 0.6rem;
       text-decoration: none;
 
-      &:where(:hover, :focus-visible) {
+      &:hover,
+      &:focus-visible {
         border-color: light-dark(
           hsl(var(--color-foreground-hsl-light) / 25%),
           hsl(var(--color-foreground-hsl-dark) / 25%)
