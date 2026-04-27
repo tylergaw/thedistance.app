@@ -368,7 +368,8 @@ async function handleDelete(e) {
       text-overflow: ellipsis;
       white-space: nowrap;
 
-      &:where(:hover, :focus-visible) {
+      &:hover,
+      &:focus-visible {
         text-decoration: underline;
       }
     }

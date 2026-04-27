@@ -7,6 +7,13 @@
 
     <script @raw="`const API_BASE = '${site.apiBase}';`" webc:keep>
       const FETCH_OPTS = { credentials: "include" };
+
+      /*
+        We set any selected color scheme before anything else to avoid any flash.
+      */
+      const COLOR_SCHEME_STORAGE_KEY = "settings:colorScheme";
+      document.documentElement.style.colorScheme =
+        localStorage.getItem(COLOR_SCHEME_STORAGE_KEY) || "light";
     </script>
 
     <link rel="stylesheet" href="/vendor/maplibre-gl.css" webc:keep />

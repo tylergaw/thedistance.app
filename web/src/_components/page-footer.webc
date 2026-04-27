@@ -111,7 +111,8 @@
         color: currentColor;
         text-decoration: none;
 
-        &:where(:hover, :focus-visible) {
+        &:hover,
+        &:focus-visible {
           text-decoration: underline;
         }
       }
@@ -140,7 +141,8 @@
           width: var(--size);
         }
 
-        &:where(:hover, :focus-visible) {
+        &:hover,
+        &:focus-visible {
           color: var(--color-accent-foreground);
 
           svg {

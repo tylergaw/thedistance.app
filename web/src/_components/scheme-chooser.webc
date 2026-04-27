@@ -43,10 +43,13 @@
 </button>
 
 <script webc:bucket="components">
-  const STORAGE_KEY = "settings:colorScheme";
+  /*
+    NOTE: We do an initial check/set of the scheme in layout.webc to avoid
+    an initial flash if the user has chosen dark scheme.
+  */
 
   function getScheme() {
-    return localStorage.getItem(STORAGE_KEY) || "light";
+    return localStorage.getItem(COLOR_SCHEME_STORAGE_KEY) || "light";
   }
 
   function applyScheme(scheme) {
@@ -64,7 +67,7 @@
   function toggleScheme(e) {
     e.preventDefault();
     const next = getScheme() === "light" ? "dark" : "light";
-    localStorage.setItem(STORAGE_KEY, next);
+    localStorage.setItem(COLOR_SCHEME_STORAGE_KEY, next);
     applyScheme(next);
   }
 
@@ -89,7 +92,8 @@
     padding: 0.35rem;
     text-decoration: none;
 
-    &:where(:hover, :focus-visible) {
+    &:hover,
+    &:focus-visible {
       border-color: light-dark(
         hsl(var(--color-foreground-hsl-light) / 25%),
         hsl(var(--color-foreground-hsl-dark) / 25%)
